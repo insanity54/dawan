@@ -12,5 +12,5 @@
       "express": "3.4.4"
   },
   "author": "Chris Grimmett <chris@grimtech.net>",
-  "license": "BSD-2-Clause"
+  "license": "MIT"
 }
