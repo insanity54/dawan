@@ -1,0 +1,16 @@
+{
+  "name": "DA-WAN",
+  "version": "0.0.0",
+  "description": "helper for DDNS on multi-WAN routers",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "dependencies": {
+      "nunjucks": "1.0.0",
+      "redis": "0.9.1",
+      "express": "3.4.4"
+  },
+  "author": "Chris Grimmett <chris@grimtech.net>",
+  "license": "BSD-2-Clause"
+}
