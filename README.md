@@ -1,3 +1,4 @@
-hello
+dawan
+=====
 
-this is a work in progress of a system which provides multi-wan routers with DDNS
+A work in progress of a web service which provides a method for multi-wan routers to use DDNS, regardless of whether or not the router firmware provides a method of DDNS.
