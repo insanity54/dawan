@@ -2,13 +2,20 @@
 // INCLUDES
 var express = require('express');
 var http = require('http');
-var util = require('util');  // @todo delete me before deploy
 
 var app = express();
 var server = http.createServer(app);
 
-var port = config.port;
+var nconf = require('nconf');
 
+// use these environment variables
+nconf.env(['port']);
+
+nconf.defaults({
+    'port': '8080'
+});
+
+var port = nconf.get('port');
 
 
 // FAKE DATABASE
@@ -46,3 +53,4 @@ app.get("/secret", function(req, res) {
 
 app.use(express.static(__dirname + '/public'));
 
+server.listen(port);

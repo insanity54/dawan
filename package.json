@@ -4,13 +4,17 @@
   "description": "helper for DDNS on multi-WAN routers",
   "main": "app.js",
   "scripts": {
-    "test": "node app.js"
+    "start": "node app.js"
   },
   "dependencies": {
       "nunjucks": "1.0.0",
-      "redis": "0.9.1",
+      "nconf": "0.6.8",
       "express": "3.4.4"
   },
   "author": "Chris Grimmett <chris@grimtech.net>",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+      "type": "git",
+      "url": "git://github.com/insanity54/dawan"
+  }
 }
