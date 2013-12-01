@@ -9,7 +9,9 @@
   "dependencies": {
       "nunjucks": "1.0.0",
       "nconf": "0.6.8",
-      "express": "3.4.4"
+      "express": "3.4.4",
+      "redis": "0.9.1",
+      "redis-jsonify": "0.0.4"
   },
   "author": "Chris Grimmett <chris@grimtech.net>",
   "license": "MIT",
