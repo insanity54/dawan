@@ -4,6 +4,8 @@ var express = require('express');
 var http = require('http');
 var app = express();
 var server = http.createServer(app);
+var path = require('path');
+var nunjucks = require('nunjucks');
 var nconf = require('nconf');
 var redis = require('redis');
 var jsonify = require('redis-jsonify');
@@ -35,46 +37,15 @@ nconf.env(['port', 'secret', 'password'])
      .file({ file: 'config.json' });
 
 
+// defaults if config file does not set them
 nconf.defaults({
     'port': '8080',
 });
 
+// set up nunjucks
+nunjucksEnv = new nunjucks.Environment( new nunjucks.FileSystemLoader(__dirname + '/public/tpl'),{ autoescape: true });
+nunjucksEnv.express(app);
 
-
-// redis helper function to stringify an object
-// thanks to http://stackoverflow.com/questions/18942089/storing-nested-javascript-objects-in-redis-nodejs
-// and node-memcached for the following two functions (see license ./LICENSE_node-memcached)
-var stringify = function(value) {
-    if (Buffer.isBuffer(value)) {
-	flag = FLAG_BINARAY;
-	value = value.toString('binary');
-
-    } else if (valuetype === 'number') {
-	flag = FLAG_NUMERIC;
-	value = value.toString();
-
-    } else if (valuetype !== 'string') {
-	flag = FLAG_JSON;
-	value = JSON.stringify(value);
-    }
-}
-
-var parse = function(flag) {
-    switch (flag) {
-    case FLAG_JSON:
-        
-        dataSet = JSON.parse(dataSet);
-        break;
-    case FLAG_NUMERIC:
-        dataSet = +dataSet;
-        break;
-    case FLAG_BINARY:
-        tmp = new Buffer(dataSet.length);
-        tmp.write(dataSet, 0, 'binary');
-        dataSet = tmp;
-        break;
-    }
-}
 
 // DATABASE
 //
@@ -100,8 +71,6 @@ var parse = function(flag) {
 // SET users:$id:config:update.time '3000 6000'
 
 
-
-
 var users = {
     "account": {
         "name": "george henry",
@@ -118,6 +87,7 @@ var users = {
     }
 } 
 
+
 client.set("users", users, function(err, result) {
     client.get("users", function(err, result) {
         console.dir(result);
@@ -126,20 +96,27 @@ client.set("users", users, function(err, result) {
 
 
 app.set('views', __dirname + '/tpl');
-app.set('view engine', "nunjucks");
+app.set('view engine', 'nunjucks');
 
 
 //
 // ROUTES
 //
 app.get("/", function(req, res) {
-    res.send('hello thank you for visiting');
+    res.render('index.html', { title: 'Dwayne' });
 });
 
 app.get("/secret", function(req, res) {
     res.send(nconf.get('secret'));
 });
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static(path.join(__dirname, '/public/css')));
+app.use(express.static(path.join(__dirname, '/public/vendor')));
+app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap')));
+app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/css')));
+app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/fonts')));
+app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/js')));
+
 
 server.listen(nconf.get('port'));
