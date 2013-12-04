@@ -8,10 +8,12 @@ Installation
 ------------
 
 Dwane server installation
+
 1. Install redis (//redis.io/download)
 2. $ npm install && npm start
 
 Dwane user
+
 4. Open a web browser and point it to http://[@todo dwane server address]
 5. Create an account & login
 6. Go to administrative control panel
