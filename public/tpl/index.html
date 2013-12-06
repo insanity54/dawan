@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{{ title }}</title>
+
+        {# Bootstrap CSS #}
+        <link rel="stylesheet" href="/bootstrap.min.css">
+
+        {# Dwane custom styles 
+        <link rel="stylesheet" href="/custom.css">
+        #}
+
+        {# NOTE: all js loaded via require.js at bottom of document #}
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+
+    <body>
+        <!-- horizontal nav bar -->
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-only"></span>
+                    <span class="icon-only"></span>
+                    <span class="icon-only"></span>
+                </button>
+                <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-circle-arrow-right"></span> {{ title }}</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">Linky</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Action</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li><a href="#">Something else here</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div> {# /.navbar-collapse #}
+            </nav>
+
+            {# start of main page content #}
+            <div class="container">
+
+            <div class="status">
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="config">
+                        <h5>CONFIG</h5>
+                        <ul class="nav nav-list">
+                            <li>
+                                <a href="#"><span class="glyphicon glyphicon-transfer"></span> Routers</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="tools">
+                        <h5>TOOLS</h5>
+                        <ul class="nav nav-list">
+                            <li>
+                                <a href="#"><span class="glyphicon glyphicon-arrow-down"></span> Download client</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-9">                
+                    <div id="wans">
+                    </div>
+
+                    <script type="text/template" id="item-template">
+                        <p>{{ jenk }}</p>
+                        <p>{{ title }}</p>
+                        <div class="checkbox">
+                             <p>im right here, mum!</p>
+                            <input id="wans_complete" type="checkbox" {{ 'checked' if 'completed="true"' else 'elase' }} />
+                            <h2>{{ jenk }}</h2>
+                            <h2>{{ title }}</h2>
+                        </div>
+                    </script>
+
+                </div> {# /.col-md-9 #}
+            </div> {# /.row #}
+        </div> {# /.container #}
+
+        {# load all needed js modules via requirejs #}
+        <script data-main="main" src="/require.js"></script>
+
+
+    </body>
+</html>

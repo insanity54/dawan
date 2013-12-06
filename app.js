@@ -112,6 +112,7 @@ app.get("/secret", function(req, res) {
 
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/public/css')));
+app.use(express.static(path.join(__dirname, '/public/js')));
 app.use(express.static(path.join(__dirname, '/public/vendor')));
 app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap')));
 app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/css')));
