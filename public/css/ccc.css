@@ -1,0 +1,157 @@
+.span3 {
+    width: 220px;
+}
+.row #sidebar {
+    margin-left: 0;
+}
+
+@media (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5), (min-resolution: 144dpi), (min-resolution: 1.5dppx) {
+    #page>.row {
+        background-image: url(/assets/bg-sidebar@2x.png);
+        background-size: 1120px auto;
+    }
+}
+
+@media (max-width: 1200px) {
+    #page>.row {
+        background-position: 20% 0;
+    }
+}
+
+@media (max-width: 980px) {
+    #page>.row {
+        background-position: 21.9% 0;
+    }
+}
+
+@media (max-width: 767px) {
+    #page>.row {
+        background: none;
+        margin-left: 0;
+    }
+
+    #page>.row #sidebar {
+        background: #fdfdfe;
+        border-bottom: 1px solid #d8dcea;
+    }
+}
+
+body.static #page>.row,body.charts #page>.row,body.users #page>.row,body.sessions #page>.row,body.password_resets #page>.row {
+    background-image: none;
+}
+
+#page>.row.admin {
+    background-image: none;
+    margin-left: -30px;
+}
+
+body.admin .container .span10 {
+    background: #fff;
+}
+
+#sidebar {
+    margin-left: 50px;
+    margin-right: -1px;
+    min-height: 500px;
+    padding-top: 10px;
+}
+
+#sidebar .nav {
+    padding: 0 30px 10px;
+}
+
+#sidebar .nav h5 {
+    padding: 15px 0;
+}
+
+#sidebar .nav li a {
+    color: #575e6a;
+    padding: 5px 15px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    text-shadow: none;
+}
+
+#sidebar .nav li a:hover {
+    background: rgba(0,0,0,0.02);
+    color: #444;
+}
+
+#sidebar .nav li a:hover i {
+    opacity: 0.5;
+}
+
+#sidebar .nav li a i {
+    margin-right: 5px;
+    opacity: 0.3;
+    font-style: normal;
+    width: 17px;
+    font-size: 17px;
+    display: inline-block;
+}
+
+#sidebar .nav .active>a {
+    background: none;
+    color: #348eda;
+}
+
+#sidebar .nav .active>a:hover {
+    background: #eee;
+}
+
+#sidebar .nav .active>a i {
+    opacity: 1;
+}
+
+#sidebar .docs li {
+    margin: 0 10px;
+}
+
+#sidebar .docs .nav-header {
+    padding: 15px 0;
+    margin: 10px 0 0;
+}
+
+#sidebar .minimized {
+    height: 50px;
+    overflow: hidden;
+}
+
+#sidebar .minimized .icon:before {
+    content: '\E75E';
+}
+
+#sidebar h5,#sidebar .nav-header {
+    font-size: 13px;
+    color: #9196aa;
+    padding: 15px 30px;
+    font-weight: 500;
+    border-top: 1px solid rgba(0,0,0,0.07);
+    margin: 0;
+}
+
+#sidebar h5 [class^="icon-"]:before,#sidebar h5 [class*=" icon-"]:before,#sidebar .nav-header [class^="icon-"]:before,#sidebar .nav-header [class*=" icon-"]:before {
+    float: right;
+}
+
+#sidebar h5 a,#sidebar .nav-header a {
+    display: block;
+    color: #9196aa;
+}
+
+#sidebar h5:first-child,#sidebar .nav-header:first-child {
+    border: 0;
+}
+
+#sidebar .alert {
+    background: none;
+    color: #484c57;
+    border: 0;
+    border-radius: 0;
+    border-top: 1px solid #eee;
+    padding: 30px;
+}
+
+#sidebar .alert .close {
+    right: 0;
+}

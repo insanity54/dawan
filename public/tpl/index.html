@@ -6,11 +6,15 @@
         {# Bootstrap CSS #}
         <link rel="stylesheet" href="/bootstrap.min.css">
 
-        {# Dwane custom styles 
+        {# Custom CSS #}
         <link rel="stylesheet" href="/custom.css">
-        #}
 
-        {# NOTE: all js loaded via require.js at bottom of document #}
+        {# X-editable CSS #}
+        <link rel="stylesheet" href="/bootstrap-editable.css">
+
+
+        {# NOTE: all js is loaded via require.js at bottom of document #}
+
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
@@ -54,41 +58,36 @@
 
             <div class="row">
                 <div class="col-md-3">
-                    <div class="config">
-                        <h5>CONFIG</h5>
-                        <ul class="nav nav-list">
-                            <li>
-                                <a href="#"><span class="glyphicon glyphicon-transfer"></span> Routers</a>
-                            </li>
-                        </ul>
-                    </div>
+                    <div id="sidebar">
+                        <div class="config">
+                            <h5>CONFIG</h5>
+                            <ul class="nav nav-list">
+                                <li>
+                                    <a href="#"><span class="glyphicon glyphicon-transfer"></span> Routers</a>
+                                </li>
+                            </ul>
+                        </div>
+                    
+                        <div class="tools">
+                            <h5>TOOLS</h5>
+                            <ul class="nav nav-list">
+                                <li>
+                                    <a href="#"><span class="glyphicon glyphicon-arrow-down"></span> Download client</a>
+                                </li>
+                            </ul>
+                        </div> {# /.tools #}
+                    </div>     {# /#sidebar #}
+                </div>         {# /.col-md-3 #}
 
-                    <div class="tools">
-                        <h5>TOOLS</h5>
-                        <ul class="nav nav-list">
-                            <li>
-                                <a href="#"><span class="glyphicon glyphicon-arrow-down"></span> Download client</a>
-                            </li>
-                        </ul>
-                    </div>
+                <div id="wans">
                 </div>
 
-                <div class="col-md-9">                
-                    <div id="wans">
-                    </div>
+                <div class="col-md-1">
+                    <p>
+                        <button class="btn btn-primary" type="button"><span class="glyphicon glyphicon-plus"></span> Add a WAN port</button>
+                    </p>
+                </div>
 
-                    <script type="text/template" id="item-template">
-                        <p>{{ jenk }}</p>
-                        <p>{{ title }}</p>
-                        <div class="checkbox">
-                             <p>im right here, mum!</p>
-                            <input id="wans_complete" type="checkbox" {{ 'checked' if 'completed="true"' else 'elase' }} />
-                            <h2>{{ jenk }}</h2>
-                            <h2>{{ title }}</h2>
-                        </div>
-                    </script>
-
-                </div> {# /.col-md-9 #}
             </div> {# /.row #}
         </div> {# /.container #}
 

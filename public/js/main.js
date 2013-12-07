@@ -1,38 +1,77 @@
+requirejs.config({
+    shim: {
+        'jquery': {
+            exports: '$'
+	},
+        'underscore': {
+            deps: ['jquery'],
+            exports: '_'
+	},
+        'bootstrap': ['jquery'],
+        'nunjucks': {
+            exports: 'nunjucks'
+	},
+        'backbone': {
+            deps: ['underscore'],
+            exports: 'Backbone'
+        },
+        'bootstrap-editable': ['jquery']
+    }
+});
+
+
 // require the js modules we need
 define([
     'require',
     'jquery',
-    'bootstrap',
     'underscore',
+    'bootstrap',
     'nunjucks',
-    'backbone'
+    'backbone',
+    'bootstrap-editable'
 ], function(require) {
+
+    // @todo separate logic into separate file. this file will become mainly about config.
+    // see here for example on how to split the two https://github.com/requirejs/example-jquery-shim/
+
+    console.log('helll sdfsdf oops i misspelled hello');
 
     // put nunjucks in our namespace
     var nunjucks = require('nunjucks');
+
+    var Backbone = require('backbone');
 
     // Define a wans model
     var Wans = Backbone.Model.extend({
 	// Default wans attribute value
 	defaults: {
             title: 'WAN PORT',
-            completed: false
+            completed: false,
+            jenk: "junk",
+            ports: [7270, 7271, 7272, 7273, 7274, 7275, 7276, 7277, 7278, 7279],
 	}
     });
 
     // instantiate the wans model with a title, with the enabled attribute
     // defaulting to false
-
     var myWans = new Wans({
-	title: 'Check attributes property of the logged models in the console'
+	title: 'WAN Port wun'
     });
+
+    var myWans2 = new Wans({
+        title: 'TWO TWO TWO'
+    });
+
 
     var WansView = Backbone.View.extend({
 
 	tagName: 'li',
 
 	// Cache the template function for a single item
-	wansTpl: nunjucks.render( 'wans.html', myWans.attributes ),
+	wansTpl: function(attributes) {
+            console.log( 'wantpl-> ' + attributes.title );
+            return nunjucks.render( 'wans.html', attributes );
+	},
 
 	events: {
             'dblclick label': 'edit',
@@ -50,7 +89,8 @@ define([
 	render: function() {
             
 //            var template = nunjucks.renderString( this.$el.html() );
-            this.$el.html( this.wansTpl );
+            console.dir(this.model);
+            this.$el.html( this.wansTpl( this.model.attributes ) );
 
 //            this.$el.html( this.wansTpl( this.model.toJSON() ) );
             this.input = this.$('.edit');
@@ -72,6 +112,7 @@ define([
     });
 
     // create a view for wans
-    var wansView = new WansView({model: myWans});
+//    var wansView = new WansView({model: myWans});
+    var wansView = new WansView({model: myWans2});
     
 });
