@@ -103,7 +103,8 @@ app.set('view engine', 'nunjucks');
 // ROUTES
 //
 app.get("/", function(req, res) {
-    res.render('index.html', { title: 'Dwayne' });
+//    console.dir(req.headers.host);
+    res.render('index.html', { title: 'Dwane', hostname: req.headers.host });
 });
 
 app.get("/secret", function(req, res) {
@@ -113,11 +114,15 @@ app.get("/secret", function(req, res) {
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/public/css')));
 app.use(express.static(path.join(__dirname, '/public/js')));
+app.use(express.static(path.join(__dirname, '/public/tpl')));
 app.use(express.static(path.join(__dirname, '/public/vendor')));
 app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap')));
 app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/css')));
 app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/fonts')));
 app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/js')));
+app.use(express.static(path.join(__dirname, '/public/vendor/x-editable/bootstrap3-editable/css')));
+app.use(express.static(path.join(__dirname, '/public/vendor/x-editable/bootstrap3-editable/img')));
+app.use(express.static(path.join(__dirname, '/public/vendor/x-editable/bootstrap3-editable/js')));
 
 
 server.listen(nconf.get('port'));
