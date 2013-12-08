@@ -34,7 +34,12 @@ define([
     // @todo separate logic into separate file. this file will become mainly about config.
     // see here for example on how to split the two https://github.com/requirejs/example-jquery-shim/
 
-    console.log('helll sdfsdf oops i misspelled hello');
+    console.log('hai guize i have the hsotname: ');
+
+    // @todo separate this into different file
+    // set x-editable to inline mode
+    $.fn.editable.defaults.mode ='inline';
+
 
     // put nunjucks in our namespace
     var nunjucks = require('nunjucks');
@@ -95,6 +100,15 @@ define([
 //            this.$el.html( this.wansTpl( this.model.toJSON() ) );
             this.input = this.$('.edit');
 
+            // apply editable method to elements (x-editable library)
+            $('#subdomain').editable();
+            $('#ports').editable({
+                type: 'select',
+                title: 'derp',
+                value: 2
+//                source: ports
+	    });
+
             return this;
 	},
 
@@ -116,3 +130,7 @@ define([
     var wansView = new WansView({model: myWans2});
     
 });
+
+
+
+

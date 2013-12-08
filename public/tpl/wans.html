@@ -3,6 +3,20 @@
         <p>{{ jenk }}</p>
         <p>{{ title }}</p>
 
+
+        <table id="user" class="table table-bordered table-striped" style="clear: both">
+            <tbody> 
+                <tr>         
+                    <td width="35%">Subdomain</td>
+                    <td><a href="#" id="subdomain" data-type="text" data-pk="1" data-url="/post" data-title="Subdomain">{{ subdomain if subdomain else 'mysubdomain'}}</a>.{{ hostname if hostname else 'example.com' }}</td>
+                </tr>
+                <tr>
+                    <td>TCP/IP Port</td>
+                    <td><a href="#" id="ports" data-type="text" data-pk="1" data-url="/post" data-title="Port">{{ ports if ports else 'ports'}}</a></td>
+                </tr>
+            </tbody>
+ 
+
         <div class="input-group">
             <input class="form-control input-sm" placeholder="{{ subdomain }}">
             <span class="input-group-addon">.{{ hostname if hostname else 'example.com' }}</span>
