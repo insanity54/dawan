@@ -9,7 +9,7 @@ var nunjucks = require('nunjucks');
 var nconf = require('nconf');
 var redis = require('redis');
 var jsonify = require('redis-jsonify');
-
+var passport = require('passport');
 
 var client = redis.createClient(null, null, {"retry_max_delay": "180000"});
 
@@ -41,6 +41,10 @@ nconf.env(['port', 'secret', 'password'])
 nconf.defaults({
     'port': '8080',
 });
+
+
+
+
 
 // set up nunjucks
 nunjucksEnv = new nunjucks.Environment( new nunjucks.FileSystemLoader(__dirname + '/public/tpl'),{ autoescape: true });
@@ -88,6 +92,16 @@ var users = {
 } 
 
 
+
+app.use(express.logger('dev')); // @todo for production,  change this
+
+// pass the secret for signed cookies 
+// @todo test: change this once client stores cookie, see if client can still login
+app.use(express.cookieParser('fafsaislikeawaytogetmoniesforschool'));
+
+// populate req.session
+app.use(express.session());
+
 client.set("users", users, function(err, result) {
     client.get("users", function(err, result) {
         console.dir(result);
@@ -100,6 +114,22 @@ app.set('view engine', 'nunjucks');
 
 
 //
+// MIDDLEWARE
+//
+
+// Auth
+function restrict(req, res, next) {
+    if (req.session.user) {
+        next();
+    } else {
+        req.session.error = 'You do not have permission to access this page';
+        res.redirect('/login');
+    }
+}
+
+
+
+//
 // ROUTES
 //
 app.get("/", function(req, res) {
@@ -107,8 +137,21 @@ app.get("/", function(req, res) {
     res.render('index.html', { title: 'Dwane', hostname: req.headers.host });
 });
 
-app.get("/secret", function(req, res) {
-    res.send(nconf.get('secret'));
+app.get('/test', function(req, res) {
+    var body = '';
+    if (req.session.poops) {
+        console.dir(req.session);
+	++req.session.poops;
+    } else {
+        req.session.poops = 1;
+        body += '<p>First time pooping? view this page in several browsers D: </p>';
+    }
+    res.send(body + '<p>viewed <strong>' + req.session.poops + '</strong> times.</p>');
+});
+
+
+app.get("/secret", restrict, function(req, res) {
+    res.send(nconf.get('secret') + ' <a href="/logout">log</a>');
 });
 
 app.use(express.static(path.join(__dirname, '/public')));
