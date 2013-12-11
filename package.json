@@ -4,7 +4,7 @@
   "description": "helper for DDNS on multi-WAN routers",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node index.js"
   },
   "dependencies": {
       "nunjucks": "1.0.0",

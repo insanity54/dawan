@@ -118,15 +118,14 @@ app.set('view engine', 'nunjucks');
 //
 
 // Auth
-function restrict(req, res, next) {
-    if (req.session.user) {
-        next();
-    } else {
-        req.session.error = 'You do not have permission to access this page';
-        res.redirect('/login');
-    }
-}
-
+// function restrict(req, res, next) {
+//     if (req.session.user) {
+//         next();
+//     } else {
+//         req.session.error = 'You do not have permission to access this page';
+//         res.redirect('/login');
+//     }
+// }
 
 
 //
@@ -137,21 +136,23 @@ app.get("/", function(req, res) {
     res.render('index.html', { title: 'Dwane', hostname: req.headers.host });
 });
 
-app.get('/test', function(req, res) {
-    var body = '';
-    if (req.session.poops) {
-        console.dir(req.session);
-	++req.session.poops;
-    } else {
-        req.session.poops = 1;
-        body += '<p>First time pooping? view this page in several browsers D: </p>';
-    }
-    res.send(body + '<p>viewed <strong>' + req.session.poops + '</strong> times.</p>');
-});
+// app.get('/test', function(req, res) {
+//     var body = '';
+//     if (req.session.poops) {
+//         console.dir(req.session);
+// 	++req.session.poops;
+//     } else {
+//         req.session.poops = 1;
+//         body += '<p>First time pooping? view this page in several browsers D: </p>';
+//     }
+//     res.send(body + '<p>pooped <strong>' + req.session.poops + '</strong> times.</p>');
+// });
 
+app.get('/auth/twitter', passport.authenticate('twitter'));
+app.get('/auth/twitter/callback', passport.authenticate('twitter', { successRedirect: '/', failureRedirect: '/login' }));
 
-app.get("/secret", restrict, function(req, res) {
-    res.send(nconf.get('secret') + ' <a href="/logout">log</a>');
+app.get("/secret", function(req, res) {
+//    res.send(nconf.get('secret') + ' <a href="/logout">log</a>');
 });
 
 app.use(express.static(path.join(__dirname, '/public')));
