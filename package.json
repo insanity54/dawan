@@ -2,7 +2,7 @@
   "name": "DA-WAN",
   "version": "0.0.0",
   "description": "helper for DDNS on multi-WAN routers",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
