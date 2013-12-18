@@ -1,4 +1,4 @@
 module.exports = {
-//    example: require('./example')   where 'example' is ./example.js
+// EXAMPLE:    x: require('./x')   where 'x' is ./x.js
 
 }

@@ -1,4 +1,7 @@
-var middleware = require('./../middleware');
+var middleware = require('./../middleware'),
+    passport = require('passport'),
+    TwitterStrategy = require('passport-twitter').Strategy,
+    user = require('./user');
 
 var auth = function(app) {
 
@@ -21,25 +24,122 @@ var auth = function(app) {
 
 
 
-    // // when user wants to sign in using twitter
-    // app.post('/api/auth/signup',
-    //          passport.authenticate('twitter', { successRedirect: '/success',
-    //                                             failureRedirect: '/fail' })(req, res));
 
+
+    // configure passport
+    app.use(passport.initialize());
+    app.use(passport.session());
+
+
+    passport.use(new TwitterStrategy({
+        consumerKey: app.get('TWITTER_CONSUMER_KEY'),
+        consumerSecret: app.get('TWITTER_CONSUMER_SECRET'),
+        callbackURL: "http://dwane.co:9090/api/auth/twitter/callback"
+    },
+
+    // when user successfully authenticates with twitter, do this:
+    function(token, tokenSecret, profile, done) {
+        user.findOrCreate(profile.id, function(err, usr) {
+
+        // done is a passport.js 'verify callback.'
+        // in a server exeption, set err to non-null value.
+	// in an auth failure, err remains null, and use final arg to pass additional details.
+	// more info: http://passportjs.org/guide/configure/
+
+	// error finding or creating user
+	if (err) { return done(err); }
+
+
+	    // found or created the user
+	    console.log('found: ' + usr);
+	    done(null, profile);
+
+	});
+    }))
+
+
+    // serialize user object to the session
+    // this is called on every authenticated request
+    // and stores the identifying information in the sesion data
+    passport.serializeUser(function(usr, done) {
+	console.log('ima serializeing');
+
+	done(null, usr.id);
+    });
+
+
+
+    // function findById(id, fn) {
     
+    //     // is the user in the db already?
+    //     rclient.hgetall('pizza/' + id, function(err, reply) {
+    // //        if (err) throw err;
+
+    //         if (reply) {
+    //             console.log('>>>>>>>>> REDIS: reply received: ');
+    //             console.dir(reply);
+    //             //  reply(null, user);
+    //             fn(null, reply.id);
+
+    //     	} else {
+    //             // reply is null if key is missing
+    //             console.log('didnt get anything here is reply: ');
+    //             console.dir(reply);
+    //             fn(null, null);
+
+    // 	}
+    //     });
+    // }
 
 
-    // when client wants to signin using twitter
-    // @todo this needs a custom callback to make use of SPA (instead of the passport default page redirection)
-    app.get('/api/auth/twitter', passport.authenticate('twitter', { successRedirect: '/success', faulureRedirect: '/fail' })(req, res));
+    // pull the cookie from the user's browser
+    // using the cookie, find who it is that is visiting
+    // pull that user's info from the db
+    passport.deserializeUser(function(id, done) {
+	console.log('ima deserializin and the user id is ' + id );
+	findById(id, function (err, usr) {
+            done(err, usr);
+	});
+    });
 
-    // when twitter replies with pass/fail login info
-    app.get('/auth/twitter/callback', passport.authenticate('twitter', { successRedirect: '/', failureRedirect: '/login' }));
 
+    // testing @todo deleteme
+    // route to test if user is logged in or not
+    app.get('/api/auth/loggedin', function(req, res) {
+        res.send(req.isAuthenticated() ? req.user : '0');
+    });
+
+    // route to log in
+    app.post('/api/auth/login', passport.authenticate('local'), function(req, res) {
+        res.send(req.user);
+    });
+
+    // route to log out
+    app.post('/api/auth/logout', function(req, res) {
+	req.logOUt();
+	res.send(200);
+    });
+
+
+
+    // when user wants to sign in using twitter
+    //   - the user's browser posts /api/auth/twitter
+    //   - user's browser redirects to twitter
+    //   - twitter does it's sign-in/auth thing
+    //   - twitter calls back /api/auth/twitter/callback with success or fail
+    app.get('/api/auth/twitter', passport.authenticate('twitter'));
+
+    app.get('/api/auth/twitter/callback',
+        passport.authenticate('twitter', { successRedirect: '/secret',
+                                           failureRedirect: '/login' }));
 
     app.get("/secret", function(req, res) {
 	//    res.send(nconf.get('secret') + ' <a href="/logout">log</a>');
     });
+
 };
 
 module.exports = auth;
+
+
+
