@@ -46,6 +46,15 @@ define([
 
     var Backbone = require('backbone');
 
+
+
+
+    
+
+
+
+
+
     // Define a wans model
     var Wans = Backbone.Model.extend({
 	// Default wans attribute value
@@ -57,6 +66,8 @@ define([
 	}
     });
 
+
+
     // instantiate the wans model with a title, with the enabled attribute
     // defaulting to false
     var myWans = new Wans({
@@ -67,6 +78,39 @@ define([
         title: 'TWO TWO TWO'
     });
 
+    
+    var wan_add_button = Backbone.View.extend({
+
+        tagName: 'li',
+
+        // cache the template
+        wan_add_tpl: function(attributes) {
+            return nunjucks.render( 'wan_add.html', attributes );
+        },
+
+        // listen for these events
+        events: {
+            'click #wan_add': 'wan_add'
+	},
+
+        // called when the view is first created
+        initialize: function() {
+            this.$el = $('#wan_add');
+            this.render();
+	},
+
+	render: function() {
+            
+            console.dir(this.model);
+            this.$el.html( this.wan_add_tpl( this.model.attributes ) );
+
+            return this;
+	}
+
+    });
+
+
+        
 
     var WansView = Backbone.View.extend({
 
@@ -81,7 +125,9 @@ define([
 	events: {
             'dblclick label': 'edit',
             'keypress .edit': 'updateOnEnter',
-            'blur .edit': 'close'
+            'blur .edit': 'close',
+            'click .btn': 'updateOnEnter',
+            'click #addwan': 'addWan'
 	},
 
 	// Called when the view is first created
@@ -95,10 +141,13 @@ define([
             
 //            var template = nunjucks.renderString( this.$el.html() );
             console.dir(this.model);
-            this.$el.html( this.wansTpl( this.model.attributes ) );
+//            nunjucks.render( 'wans.html', attributes );
+
+            this.$el.html(nunjucks.render( 'wans.html', this.model.attributes ));
+//            this.$el.html( this.wansTpl( this.model.attributes ));
 
 //            this.$el.html( this.wansTpl( this.model.toJSON() ) );
-            this.input = this.$('.edit');
+//            this.input = this.$('.edit');
 
             // apply editable method to elements (x-editable library)
             $('#subdomain').editable();
@@ -109,28 +158,40 @@ define([
 //                source: ports
 	    });
 
+            $('<p><button id="addwan" class="btn btn-primary" type="button"><span class="glyphicon glyphicon-plus"></span> Add a WAN porT</button></p>').insertAfter('#wans');
+
             return this;
 	},
 
 	edit: function() {
             // executed when wan label is double clicked
+            console.log('dbl click');
 	},
 
 	close: function() {
             // executed when wan loses focus
+            console.log('close event fired');
 	},
 
 	updateOnEnter: function( e ) {
             // executed on each keypress when in wans edit mode
+            console.log('updateOnEnter has fired. e:' + e);
+	},
+
+	addWan: function() {
+            // called when the button is clicked
+            console.log('addWan event');
 	}
+
+
     });
+
 
     // create a view for wans
 //    var wansView = new WansView({model: myWans});
     var wansView = new WansView({model: myWans2});
+
+    // create a view for the wan add button
+//    var wanAdd = new WansView({model: myWanAdd});
     
 });
-
-
-
-
