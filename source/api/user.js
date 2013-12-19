@@ -6,14 +6,20 @@ function findOrCreate(id, callback) {
     //    user.findOrCreate = function(id, fn) {
     // finds the specified user id. if specified user id doesn't exit, create the user
 
+    console.log('user module here. my find or create method was called.');
+
     var rclient = redis.createClient(null, null, {"retry_max_delay": "180000"});    
 
     rclient.get('user/' + id, function(err, reply) {
-        if (err) console.log('err: ' + err);// throw err;
+        if (err) { console.log('rclient eror: ' + err); }
         if (reply) {
-//		console.log('REDIS: reply received: ');
-//		console.dir(reply.toString());
-                callback(null, reply.toString());
+            console.log('findOrCreate method here. REDIS: reply received: ');
+//          console.dir(reply.toString());
+            callback(null, reply.toString());
+
+	} else {
+            console.log('findOrCreate method here. didn\'t get a reply from redis.');
+            callback(null, 'terd');
 	}
     });
 }

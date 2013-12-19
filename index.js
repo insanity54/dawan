@@ -11,10 +11,8 @@ var express = require('express'),
     nconf = require('nconf'),
     redis = require('redis'),
     //jsonify = require('redis-jsonify'),
-//    passport = require('passport'),
+    passport = require('passport'),
     middleware = require('./source/middleware');
-
-
 
 
 
@@ -41,17 +39,33 @@ app.set('SESSION_SECRET', nconf.get('SESSION_SECRET'));
 app.set('TWITTER_CONSUMER_KEY', nconf.get('TWITTER_CONSUMER_KEY'));
 app.set('TWITTER_CONSUMER_SECRET', nconf.get('TWITTER_CONSUMER_SECRET'));
 
+
+// serve these static directories
+app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static(path.join(__dirname, '/public/css')));
+app.use(express.static(path.join(__dirname, '/public/js')));
+app.use(express.static(path.join(__dirname, '/public/tpl')));
+app.use(express.static(path.join(__dirname, '/public/vendor')));
+app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap')));
+app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/css')));
+app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/fonts')));
+app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/js')));
+app.use(express.static(path.join(__dirname, '/public/vendor/x-editable/bootstrap3-editable/css')));
+app.use(express.static(path.join(__dirname, '/public/vendor/x-editable/bootstrap3-editable/img')));
+app.use(express.static(path.join(__dirname, '/public/vendor/x-editable/bootstrap3-editable/js')));
+
+
+// other express stuffy stuff
 app.use(express.cookieParser());
 app.use(express.bodyParser());
 app.use(express.session({ secret: app.get('SESSION_SECRET') }));
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(app.router);
 app.use(express.logger('dev')); // @todo for production,  change this
         rclient.on("error", function(err) {
         console.log("Error " + err);
 });
-app.use(app.router);
-
 
 
 
@@ -75,19 +89,6 @@ nunjucksEnv.express(app);
 // });
 
 
-// serve these static directories
-app.use(express.static(path.join(__dirname, '/public')));
-app.use(express.static(path.join(__dirname, '/public/css')));
-app.use(express.static(path.join(__dirname, '/public/js')));
-app.use(express.static(path.join(__dirname, '/public/tpl')));
-app.use(express.static(path.join(__dirname, '/public/vendor')));
-app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap')));
-app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/css')));
-app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/fonts')));
-app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/js')));
-app.use(express.static(path.join(__dirname, '/public/vendor/x-editable/bootstrap3-editable/css')));
-app.use(express.static(path.join(__dirname, '/public/vendor/x-editable/bootstrap3-editable/img')));
-app.use(express.static(path.join(__dirname, '/public/vendor/x-editable/bootstrap3-editable/js')));
 
 
 // api endpoints
