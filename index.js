@@ -10,7 +10,6 @@ var express = require('express'),
     nunjucks = require('nunjucks'),
     nconf = require('nconf'),
     redis = require('redis'),
-    //jsonify = require('redis-jsonify'),
     passport = require('passport'),
     middleware = require('./source/middleware');
 
