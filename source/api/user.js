@@ -18,8 +18,9 @@ function findOrCreate(id, callback) {
             callback(null, reply.toString());
 
 	} else {
+            // @todo if we didn't get a reply, that means the user doesn't exist. we need to create the user entry in the db
             console.log('findOrCreate method here. didn\'t get a reply from redis.');
-            callback(null, 'terd');
+            callback(null, 'terd'); // @todo this line is a test. delete or modify
 	}
     });
 }
