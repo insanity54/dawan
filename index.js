@@ -18,7 +18,6 @@ var express = require('express'),
 // connect to redis
 var rclient = redis.createClient(null, null, {"retry_max_delay": "180000"});
 
-// log errors
 
 
 // allow use of these specified environment variables (whitelist)
@@ -32,6 +31,7 @@ nconf.defaults({
 });
 
 // configure the app
+// @todo if any of these nconf keys are missing, throw an error so the user knows what to do
 app.set('TITLE', nconf.get('TITLE'));
 app.set('PORT', nconf.get('PORT'));
 app.set('SESSION_SECRET', nconf.get('SESSION_SECRET'));
@@ -43,7 +43,7 @@ app.set('TWITTER_CONSUMER_SECRET', nconf.get('TWITTER_CONSUMER_SECRET'));
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/public/css')));
 app.use(express.static(path.join(__dirname, '/public/js')));
-app.use(express.static(path.join(__dirname, '/public/tpl')));
+//app.use(express.static(path.join(__dirname, '/public/tpl')));
 app.use(express.static(path.join(__dirname, '/public/vendor')));
 app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap')));
 app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/css')));
@@ -66,7 +66,7 @@ app.use(express.logger('dev')); // @todo for production,  change this
         console.log("Error " + err);
 });
 
-
+app.use(middleware.serveMaster(app.get('TITLE'), 'index.html', './@todo put js path here', './@todo put css path here'));
 
 
 
@@ -92,7 +92,9 @@ nunjucksEnv.express(app);
 
 // api endpoints
 require('./source/api/auth')(app);
-//require('./source/api/user')(app);
+
+
+
 
 
 console.log('App runnin');

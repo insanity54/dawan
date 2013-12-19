@@ -3,13 +3,11 @@ var middleware = require('./../middleware'),
     TwitterStrategy = require('passport-twitter').Strategy,
     user = require('./user');
 
+
 var auth = function(app) {
 
 
-    // configure passport             (done in index)
-//   app.use(passport.initialize()); 
-   // app.use(passport.session());
-
+    middleware.serveMaster(app.get('TITLE'), 'index', './@todo put js path here', './@todo put css path here');
 
     // serialize user object to the session
     // this is called on every authenticated request
@@ -25,9 +23,10 @@ var auth = function(app) {
     // pull that user's info from the db
     passport.deserializeUser(function(id, done) {
 	console.log('ima deserializin and the user id is ' + id );
-	findById(id, function (err, usr) {
-            done(err, usr);
-	});
+//	findById(id, function (err, usr) {
+//            done(err, usr);
+//	});
+        done(err, usr);
     });
 
     
