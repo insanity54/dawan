@@ -1,5 +1,5 @@
 var _ = require('underscore');
-//var client = require('./../client
+//var client = require('./../client // this includes the grunt(?) built clientside source
 
 
 
