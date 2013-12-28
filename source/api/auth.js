@@ -23,10 +23,13 @@ var auth = function(app) {
     // pull that user's info from the db
     passport.deserializeUser(function(id, done) {
 	console.log('ima deserializin and the user id is ' + id );
-//	findById(id, function (err, usr) {
-//            done(err, usr);
-//	});
-        done(err, usr);
+	user.findTwitter(id, function (err, user) {
+            if (err) throw err;
+            if (!user) {
+                 done(null, null)
+            };
+            done(null, user); // @todo this needs to return a user from the db
+        });
     });
 
     
@@ -38,7 +41,21 @@ var auth = function(app) {
 
     // when user successfully authenticates with twitter, do this:
         function(token, tokenSecret, profile, done) {
-            user.findOrCreate(profile.id, function(err, usr) {
+            user.findTwitter(profile.id, function(err, found) {
+                // @todo this function can be abstracted a bit better in the user module
+
+                if (!found) {
+                    user.create(profile, function(err, user) {
+                        if (err) throw err;
+		    });
+                }
+
+                // successfully found or created user
+                done(null, profile);
+            });
+	}))		                
+
+//            user.findOrCreate('twitter.' + profile.id, function(err, usr) {
 
                 // done is a passport.js 'verify callback.'
                 // in a server exeption, set err to non-null value.
@@ -46,17 +63,17 @@ var auth = function(app) {
                 // more info: http://passportjs.org/guide/configure/
                 // error finding or creating user
 
-		if (err) { 
-                    console.log('auth mod here. i tried to findorcreate but failed.');
-                    return done(err);
+	// 	if (err) { 
+        //             console.log('auth mod here. i tried to findorcreate but failed.');
+        //             return done(err);
 
-		} else {
-		    // found or created the user                                       
-		    console.log('found: ' + usr);
-                    done(null, profile);
-		}
-            });
-	}))
+	// 	} else {
+	// 	    // found or created the user                                       
+	// 	    console.log('found: ' + usr);
+        //             done(null, profile);
+	// 	}
+        //     });
+	// }))
 
 
 
@@ -116,7 +133,7 @@ var auth = function(app) {
 	    function(req, res) {
 		// if this func gets called, auth was successful.
 		// req.user contains the authenticated user.
-		res.send(req.user.username);		
+		res.send(req.user);		
 	    });
 
     app.get("/secret", function(req, res) {
