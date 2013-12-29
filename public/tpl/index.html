@@ -36,17 +36,25 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#">Linky</a></li>
+
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+                    {% if user %}
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user }} <b class="caret"></b></a>
+
+                    {% else %}
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Login Options <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a href="/api/auth/twitter">Sign in with Twitter</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#">logout</a></li>
+                            <li><a href="#" onclick="window.open('/api/auth/twitter', 'window', 'status=0,menubar=0,resizable=1,width=500,height=600;')">Sign in with Twitter</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">logout</a></li>
                             </ul>
-                        </li>
-                    </ul>
+
+                    {% endif %}
+
+                    </li>                        
+                </ul>
                 </div> {# /.navbar-collapse #}
             </nav>
 

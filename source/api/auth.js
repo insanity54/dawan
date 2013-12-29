@@ -9,7 +9,7 @@ var auth = function(app) {
 
     middleware.serveMaster(app.get('TITLE'), 'index', './@todo put js path here', './@todo put css path here');
 
-    // serialize user object to the session
+    // Serialize user object to the session
     // this is called on every authenticated request
     // and stores the identifying information in the sesion data
     passport.serializeUser(function(usr, done) {
@@ -23,12 +23,13 @@ var auth = function(app) {
     // pull that user's info from the db
     passport.deserializeUser(function(id, done) {
 	console.log('ima deserializin and the user id is ' + id );
+        
 	user.findTwitter(id, function (err, user) {
             if (err) throw err;
             if (!user) {
                  done(null, null)
             };
-            done(null, user); // @todo this needs to return a user from the db
+            done(null, user);
         });
     });
 
@@ -133,7 +134,7 @@ var auth = function(app) {
 	    function(req, res) {
 		// if this func gets called, auth was successful.
 		// req.user contains the authenticated user.
-		res.send(req.user);		
+		res.send(req.user)
 	    });
 
     app.get("/secret", function(req, res) {

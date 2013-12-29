@@ -6,7 +6,7 @@ var _ = require('underscore');
 function skipMaster(req) {
     // if the user's web browser is requesting any of these urls, 
     // don't serve the master page to that request.
-    return _.any(['/api', '/components', '/css', '/js', '/build'], function(url) {
+    return _.any(['/api', '/components', '/css', '/js', '/build', '/static', '/favicon.ico' ], function(url) {
         console.log('servemaster middleware here. got ' + url + ' so skipping serving.');
         return req.url.substr(0, url.length) === url;
     });
