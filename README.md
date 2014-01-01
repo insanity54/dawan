@@ -12,7 +12,9 @@ Installation
 Dwane server installation
 
 1. Install redis (http://redis.io/download)
-2. $ npm install && npm start
+2. $ npm install
+3. $ bower install
+4. $ npm start
 
 Dwane user
 
