@@ -1,21 +1,30 @@
 requirejs.config({
     shim: {
-        'jquery': {
+        'jQuery': {
             exports: '$'
 	},
-        'underscore': {
-            deps: ['jquery'],
+        'Underscore': {
+            deps: ['jQuery'],
             exports: '_'
 	},
-        'bootstrap': ['jquery'],
+        'bootstrap': ['jQuery'],
         'nunjucks': {
             exports: 'nunjucks'
 	},
-        'backbone': {
-            deps: ['underscore'],
+        'Backbone': {
+            deps: ['Underscore'],
             exports: 'Backbone'
         },
-        'bootstrap-editable': ['jquery']
+        'xeditable': ['jQuery']
+    },
+
+    paths: {
+        jQuery: './../components/jquery/jquery',
+        Underscore: './../components/underscore/underscore',
+        Backbone: './../components/backbone/backbone',
+        bootstrap: './../components/bootstrap/dist/js/bootstrap',
+        nunjucks: './../components/nunjucks/browser/nunjucks',
+        xeditable: './../components/x-editable/dist/bootstrap3-editable/js/bootstrap-editable'
     }
 });
 
@@ -23,12 +32,12 @@ requirejs.config({
 // require the js modules we need
 define([
     'require',
-    'jquery',
-    'underscore',
+    'jQuery',
+    'Underscore',
     'bootstrap',
     'nunjucks',
-    'backbone',
-    'bootstrap-editable'
+    'Backbone',
+    'xeditable'
 ], function(require) {
 
     // @todo separate logic into separate file. this file will become mainly about config.
@@ -44,7 +53,7 @@ define([
     // put nunjucks in our namespace
     var nunjucks = require('nunjucks');
 
-    var Backbone = require('backbone');
+    var Backbone = require('Backbone');
 
 
 

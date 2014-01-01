@@ -1,5 +1,5 @@
 {
-  "name": "DA-WAN",
+  "name": "dwane",
   "version": "0.0.0",
   "description": "helper for DDNS on multi-WAN routers",
   "main": "index.js",

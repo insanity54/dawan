@@ -134,7 +134,9 @@ var auth = function(app) {
 	    function(req, res) {
 		// if this func gets called, auth was successful.
 		// req.user contains the authenticated user.
-		res.send(req.user)
+		//res.send(req.user)
+                middleware.serveMaster(app.get('TITLE'), 'index', './@todo put js path here', './@todo put\
+css path here');
 	    });
 
     app.get("/secret", function(req, res) {

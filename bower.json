@@ -1,0 +1,13 @@
+{
+    "name": "dwane",
+    "version": "0.0.0",
+    "dependencies": {
+        "underscore": "1.5.2",
+        "jquery": "2.0.3",
+        "backbone": "1.1.0",
+        "bootstrap": "3.0.3",
+        "requirejs": "2.1.9",
+        "nunjucks": "1.0.1",
+        "x-editable": "1.5.1"
+    }
+}

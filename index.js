@@ -39,22 +39,23 @@ app.set('TWITTER_CONSUMER_KEY', nconf.get('TWITTER_CONSUMER_KEY'));
 app.set('TWITTER_CONSUMER_SECRET', nconf.get('TWITTER_CONSUMER_SECRET'));
 
 
-// serve these static directories
+// // serve these static directories
 app.use(express.static(path.join(__dirname, '/public')));
-app.use(express.static(path.join(__dirname, '/public/css')));
-app.use(express.static(path.join(__dirname, '/public/js')));
-//app.use(express.static(path.join(__dirname, '/public/tpl')));
-app.use(express.static(path.join(__dirname, '/public/vendor')));
-app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap')));
-app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/css')));
-app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/fonts')));
-app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/js')));
-app.use(express.static(path.join(__dirname, '/public/vendor/x-editable/bootstrap3-editable/css')));
-app.use(express.static(path.join(__dirname, '/public/vendor/x-editable/bootstrap3-editable/img')));
-app.use(express.static(path.join(__dirname, '/public/vendor/x-editable/bootstrap3-editable/js')));
+// app.use(express.static(path.join(__dirname, '/public/css')));
+// app.use(express.static(path.join(__dirname, '/public/js')));
+// //app.use(express.static(path.join(__dirname, '/public/tpl')));
+// app.use(express.static(path.join(__dirname, '/public/vendor')));
+// app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap')));
+// app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/css')));
+// app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/fonts')));
+// app.use(express.static(path.join(__dirname, '/public/vendor/bootstrap/js')));
+// app.use(express.static(path.join(__dirname, '/public/vendor/x-editable/bootstrap3-editable/css')));
+// app.use(express.static(path.join(__dirname, '/public/vendor/x-editable/bootstrap3-editable/img')));
+// app.use(express.static(path.join(__dirname, '/public/vendor/x-editable/bootstrap3-editable/js')));
 
 
 // other express stuffy stuff
+//app.use(middleware.cors()); // @todo we might need this so client apps can use services
 app.use(express.cookieParser());
 app.use(express.bodyParser());
 app.use(express.session({ secret: app.get('SESSION_SECRET') }));
@@ -66,13 +67,13 @@ app.use(express.logger('dev')); // @todo for production,  change this
         console.log("Error " + err);
 });
 
-app.use(middleware.serveMaster(app.get('TITLE'), 'index.html', './@todo put js path here', './@todo put css path here'));
+app.use(middleware.serveMaster(app.get('TITLE'), '/js/main.js', '/css/main.css'));
 
 
 
 
 // set up nunjucks
-nunjucksEnv = new nunjucks.Environment( new nunjucks.FileSystemLoader(__dirname + '/public/tpl'),{ autoescape: true });
+nunjucksEnv = new nunjucks.Environment( new nunjucks.FileSystemLoader(__dirname + '/public/templates'),{ autoescape: true });
 nunjucksEnv.express(app);
 
 //app.set('views', __dirname + '/tpl');

@@ -3,14 +3,17 @@
     <head>
         <title>{{ title }}</title>
 
+        {# CSS fed to template via node #}
+        <link rel="stylesheet" href="/css/main.css">
+
         {# Bootstrap CSS #}
-        <link rel="stylesheet" href="/bootstrap.min.css">
+        {#<link rel="stylesheet" href="/bootstrap.min.css">#}
 
         {# Custom CSS #}
-        <link rel="stylesheet" href="/custom.css">
+        {#<link rel="stylesheet" href="/custom.css">#}
 
         {# X-editable CSS #}
-        <link rel="stylesheet" href="/bootstrap-editable.css">
+        {#<link rel="stylesheet" href="/bootstrap-editable.css">#}
 
 
         {# NOTE: all js is loaded via require.js at bottom of document #}
@@ -98,9 +101,9 @@
             </div> {# /.row #}
         </div> {# /.container #}
 
-        {# load all needed js modules via requirejs #}
-        <script data-main="main" src="/require.js"></script>
-
+        {# load all needed js using requirejs shim fed to template via node #}
+        <p>{{ js }}</p>
+        <script data-main="{{ js }}" src="/components/requirejs/require.js"></script>
 
     </body>
 </html>

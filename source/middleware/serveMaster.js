@@ -12,13 +12,13 @@ function skipMaster(req) {
     });
 }
 
-function serve(title, tpl, js, css) {
+function serve(title, js, css) {
     return function (req, res, next) {
 	if (skipMaster(req)) {
             return next();
 	}
         console.log('servemaster middleware here. got ' + req.url + ' so SERVING!');
-	res.render(tpl, { title: title, js: js, css: css });
+	res.render('index.html', { title: title, js: js, css: css });
     };
 }
 
