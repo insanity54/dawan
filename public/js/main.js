@@ -1,3 +1,5 @@
+// handles javascript module loading
+
 requirejs.config({
     shim: {
         'jQuery': {
@@ -8,6 +10,7 @@ requirejs.config({
             exports: '_'
 	},
         'bootstrap': ['jQuery'],
+
         'nunjucks': {
             exports: 'nunjucks'
 	},
@@ -15,7 +18,11 @@ requirejs.config({
             deps: ['Underscore'],
             exports: 'Backbone'
         },
-        'xeditable': ['jQuery']
+        'xeditable': ['jQuery', 'bootstrap'],
+
+        'ApplicationRouter': {
+            deps: ['jQuery', 'Underscore,', 'Backbone']
+        }
     },
 
     paths: {
@@ -29,6 +36,19 @@ requirejs.config({
 });
 
 
+require(['core/router', 'core/client', 'Backbone'], function(Router, client, Backbone) {
+    var app = {
+        root: '/'
+    };
+
+    window.Router = new Router();
+    client.setup(window, app);
+
+    Backbone.history.start({ pushState: true });
+});
+
+
+/*
 // require the js modules we need
 define([
     'require',
@@ -59,10 +79,6 @@ define([
 
 
     
-
-
-
-
 
     // Define a wans model
     var Wans = Backbone.Model.extend({
@@ -204,3 +220,4 @@ define([
 //    var wanAdd = new WansView({model: myWanAdd});
     
 });
+*/

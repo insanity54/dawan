@@ -1,4 +1,4 @@
-var Wans = Backbone.Model.extend({
+var Wan = Backbone.Model.extend({
     // Default wans attribute value
     defaults: {
         title: 'WAN PORT',

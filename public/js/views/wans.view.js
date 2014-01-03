@@ -5,7 +5,7 @@ define([
   'bootstrap',
   'nunjucks',
   'backbone',
-  'bootstrap-editable'
+  'xeditable'
 ], function(require) {
 
     var view = {};
