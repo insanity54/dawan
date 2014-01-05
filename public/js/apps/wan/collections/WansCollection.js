@@ -2,7 +2,7 @@ define(function(require) {
     var Backbone = require('Backbone');
     var Wan = require('./../models/Wan');
 
-    var WanCollection = Backbone.Collection.extend({
+    var WansCollection = Backbone.Collection.extend({
         model: Wan,
 
         url: 'api/wans',
@@ -10,5 +10,5 @@ define(function(require) {
         title: 'courtesy of backbonejs'
     });
 
-    return WanCollection;
+    return WansCollection;
 });

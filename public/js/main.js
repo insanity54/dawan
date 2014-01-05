@@ -45,6 +45,7 @@ require(['core/router', 'core/client', 'Backbone'], function(Router, client, Bac
     client.setup(window, app);
 
     Backbone.history.start({ pushState: true });
+
 });
 
 
