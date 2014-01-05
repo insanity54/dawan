@@ -1,13 +1,13 @@
 define(function(require) {
     var Backbone = require('Backbone');
 
-    var WansView = Backbone.View.Extend({
+    var WanView = Backbone.View.Extend({
         tagName: 'li',
 
         // Cache the template function for a single item
         template: function(attributes) {
             console.log( 'wantpl-> ' + attributes.title );
-            return nunjucks.render( 'wans.html', attributes );
+            return nunjucks.render( 'WanView.html', attributes );
 	},
 
 	events: {
@@ -29,9 +29,9 @@ define(function(require) {
             
 //            var template = nunjucks.renderString( this.$el.html() );
             console.dir(this.model);
-//            nunjucks.render( 'wans.html', attributes );
+//            nunjucks.render( 'WanView.html', attributes );
 
-            this.$el.html(nunjucks.render( 'wans.html', this.model.attributes ));
+            this.$el.html(nunjucks.render( 'WanView.html', this.model.attributes ));
 //            this.$el.html( this.wansTpl( this.model.attributes ));
 
 //            this.$el.html( this.wansTpl( this.model.toJSON() ) );
@@ -77,7 +77,7 @@ define(function(require) {
 
     // create a view for wans
 //    var wansView = new WansView({model: myWans});
-    var wansView = new WansView({model: myWans2});
+    var wanView = new WanView({model: myWan});
 
     // create a view for the wan add button
 //    var wanAdd = new WansView({model: myWanAdd});

@@ -5,7 +5,7 @@ define(function(require) {
     var Router = Backbone.Router.extend({
         routes: {
             '' : function() {
-                require('./../apps/wans/app').run(viewManager);
+                require('./../apps/wan/app').run(viewManager);
 	    }
 
 	}

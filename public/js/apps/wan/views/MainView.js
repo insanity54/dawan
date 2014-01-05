@@ -13,10 +13,6 @@ define(function(require) {
             this.$el.append(addWanView.render().el);
             this.subviews.push(addWanView);
 
-            var wansView = new AddWanView();
-            this.$el.append(wansView.render().el);
-            this.subviews.push(inboxView);
-
             return this;
 	}
     });
