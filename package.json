@@ -7,18 +7,23 @@
     "start": "node index.js"
   },
   "dependencies": {
-      "nunjucks": "1.0.0",
-      "nconf": "0.6.8",
-      "express": "3.4.4",
-      "redis": "0.9.1",
-      "passport": "0.1.17",
-      "passport-twitter": "1.0.2",
-      "underscore": "1.5.x"
+    "nunjucks": "1.0.0",
+    "nconf": "0.6.8",
+    "express": "3.4.4",
+    "redis": "0.9.1",
+    "passport": "0.1.17",
+    "passport-twitter": "1.0.2",
+    "underscore": "1.5.x"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-nunjucks": "~0.1.0",
+    "grunt-contrib-watch": "~0.5.3"
   },
   "author": "Chris Grimmett <chris@grimtech.net>",
   "license": "MIT",
   "repository": {
-      "type": "git",
-      "url": "git://github.com/insanity54/dawan"
+    "type": "git",
+    "url": "git://github.com/insanity54/dawan"
   }
 }

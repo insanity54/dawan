@@ -1,11 +1,12 @@
-<p>{{ jenk }}</p>
-<p>{{ title }}</p>
+<p>I'm the client side wanview template</p>
+<p>{{ jenk if jenk else "no jenk" }}</p>
+<p>{{ title if title else "no title" }}</p>
     <div class="checkbox">
         <p>im right here, mum!</p>
         <input id="wans_complete" type="checkbox" {{ 'checked' if 'completed="true\
 "' else 'elase' }} />
-        <h2>{{ jenk }}</h2>
-        <h2>{{ title }}</h2>
+        <h2>{{ jenk if jenk else "no jenk" }}</h2>
+        <h2>{{ title if title else "no title" }}</h2>
     </div>
 </script>
 

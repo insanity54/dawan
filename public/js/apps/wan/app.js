@@ -11,6 +11,7 @@ define(function(require) {
                 success: function(wansCollection) {
                     var view = new MainView({collection: wansCollection});
                     viewManager.show(view);
+                    console.log('app had success fetching wansCollection');
                 }
             });
         }

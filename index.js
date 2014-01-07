@@ -94,7 +94,7 @@ nunjucksEnv.express(app);
 
 // api endpoints
 require('./source/api/auth')(app);
-require('./source/api/test')(app); // backbone wans app
+require('./source/api/config')(app); // backbone wans app
 
 
 

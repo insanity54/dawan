@@ -2,8 +2,7 @@ define(function(require) {
     var Backbone = require('Backbone');
     var xeditable = require('xeditable');
     var nunjucks = require('nunjucks');
-
-    var nunjucksEnv = new nunjucks.Environment(new nunjucks.WebLoader('/templates'));
+    var nunjucksEnv = new nunjucks.Environment(new nunjucks.WebLoader('/templates')); //@todo this needs to call the template client side
 
 
     var WanView = Backbone.View.extend({
@@ -42,15 +41,19 @@ define(function(require) {
 
 
             // apply editable method to elements (x-editable library)
-            $('#subdomain').editable();
-            $('#ports').editable({
+            $('#ports').editable();
+            $('#subdomain').editable({
                 type: 'select',
-                title: 'derp',
-                value: 2
-//                source: ports
+                title: 'domain',
+                value: 'jersey',
+//                source: 'domain',
+                ajaxOptions: {
+                    type: 'post',
+                    url: '/api/user/config/domain'
+                }
 	    });
 
-            $('<p><button id="addwan" class="btn btn-primary" type="button"><span class="glyphicon glyphicon-plus"></span> Add a WAN porT</button></p>').insertAfter('#wans');
+//            $('<p><button id="addwan" class="btn btn-primary" type="button"><span class="glyphicon glyphicon-plus"></span> Add a WAN port</button></p>').insertAfter('#wans');
 
             return this;
 	},

@@ -5,7 +5,7 @@ define(function(require) {
     var WansCollection = Backbone.Collection.extend({
         model: Wan,
 
-        url: 'api/wans',
+        url: 'api/user/config/wans',
 
         title: 'courtesy of backbonejs'
     });

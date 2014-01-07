@@ -3,7 +3,7 @@ var redis = require('redis');
 var rclient = redis.createClient(null, null, {"retry_max_delay": "180000"});
 
 /**
- *  createUser
+ *  create
  *
  *  Connects to the redis db, adds user data
  *
