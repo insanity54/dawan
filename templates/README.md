@@ -1,0 +1,1 @@
+The master page templates go in this directory. no client-side templates go here.

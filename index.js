@@ -66,14 +66,13 @@ app.use(express.logger('dev')); // @todo for production,  change this
         rclient.on("error", function(err) {
         console.log("Error " + err);
 });
-
-app.use(middleware.serveMaster(app.get('TITLE'), '/js/main.js', '/css/main.css'));
+app.use(middleware.serveMaster(app.get('TITLE'), '/build/main.js', '/css/main.css'));
 
 
 
 
 // set up nunjucks
-nunjucksEnv = new nunjucks.Environment( new nunjucks.FileSystemLoader(__dirname + '/public/templates'),{ autoescape: true });
+nunjucksEnv = new nunjucks.Environment( new nunjucks.FileSystemLoader(__dirname + '/templates'),{ autoescape: true });
 nunjucksEnv.express(app);
 
 //app.set('views', __dirname + '/tpl');

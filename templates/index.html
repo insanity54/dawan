@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{{ title }}</title>
+
+        {# CSS fed to template via node #}
+        <link rel="stylesheet" href="/css/main.css">
+
+        {# Bootstrap CSS #}
+        {#<link rel="stylesheet" href="/bootstrap.min.css">#}
+
+        {# Custom CSS #}
+        {#<link rel="stylesheet" href="/custom.css">#}
+
+        {# X-editable CSS #}
+        {#<link rel="stylesheet" href="/bootstrap-editable.css">#}
+
+
+        {# NOTE: all js is loaded via require.js at bottom of document #}
+
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+
+    <body>
+        <!-- horizontal nav bar -->
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-only"></span>
+                    <span class="icon-only"></span>
+                    <span class="icon-only"></span>
+                </button>
+                <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-circle-arrow-right"></span> {{ title }}</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">Linky</a></li>
+
+                    <li class="dropdown">
+                    {% if user %}
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user }} <b class="caret"></b></a>
+
+                    {% else %}
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Login Options <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                            <li><a href="#" onclick="window.open('/api/auth/twitter', 'window', 'status=0,menubar=0,resizable=1,width=500,height=600;')">Sign in with Twitter</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">logout</a></li>
+                            </ul>
+
+                    {% endif %}
+
+                    </li>                        
+                </ul>
+                </div> {# /.navbar-collapse #}
+            </nav>
+
+            {# start of main page content #}
+            <div class="container">
+
+            <div class="status">
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div id="sidebar">
+                        <div class="config">
+                            <h5>CONFIG</h5>
+                            <ul class="nav nav-list">
+                                <li>
+                                    <a href="#"><span class="glyphicon glyphicon-transfer"></span> Routers</a>
+                                </li>
+                            </ul>
+                        </div>
+                    
+                        <div class="tools">
+                            <h5>TOOLS</h5>
+                            <ul class="nav nav-list">
+                                <li>
+                                    <a href="#"><span class="glyphicon glyphicon-arrow-down"></span> Download client</a>
+                                </li>
+                            </ul>
+                        </div> {# /.tools #}
+                    </div>     {# /#sidebar #}
+                </div>         {# /.col-md-3 #}
+
+                <div id="wans">
+                </div>
+
+            </div> {# /.row #}
+        </div> {# /.container #}
+
+        {# load all needed js using requirejs shim fed to template via node #}
+        <p>{{ js }}</p>
+        <script data-main="{{ js }}" src="/components/requirejs/require.js"></script>
+
+    </body>
+</html>

@@ -4,7 +4,8 @@
   "description": "helper for DDNS on multi-WAN routers",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "grunt taco && npm start"
   },
   "dependencies": {
     "nunjucks": "1.0.0",
@@ -18,7 +19,8 @@
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-nunjucks": "~0.1.0",
-    "grunt-contrib-watch": "~0.5.3"
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-requirejs": "~0.4.1"
   },
   "author": "Chris Grimmett <chris@grimtech.net>",
   "license": "MIT",
