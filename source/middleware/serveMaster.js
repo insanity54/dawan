@@ -4,17 +4,17 @@ var _ = require('underscore');
 
 
 function skipMaster(req) {
-    // if the user's web browser is requesting any of these urls, 
-    // don't serve the master page to that request.
+    // return true if the user's web browser is requesting any of these urls, 
     return _.any(['/api', '/components', '/css', '/js', '/build', '/static', '/favicon.ico' ], function(url) {
-        console.log('servemaster middleware here. got ' + url + ' so skipping serving.');
         return req.url.substr(0, url.length) === url;
     });
 }
 
 function serve(title, js, css) {
+    // don't serve the master page to any request that is in the blacklist
     return function (req, res, next) {
 	if (skipMaster(req)) {
+            console.log('servemaster middleware here. got ' + req.url + ' so skipping serving.');
             return next();
 	}
         console.log('servemaster middleware here. got ' + req.url + ' so SERVING!');
