@@ -1,9 +1,3 @@
-
-chrome.runtime.onInstalled.addListener(function() {
-    chrome.storage.local.set(object items, function callback);
-});
-
-
 /**
  * Create control panel window when app is started
  */
