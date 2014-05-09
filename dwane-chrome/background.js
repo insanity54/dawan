@@ -1,3 +1,5 @@
+var controlWindow;
+
 /**
  * Create control panel window when app is started
  */

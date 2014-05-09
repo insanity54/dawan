@@ -4,7 +4,7 @@
 	"version": "0.0.0",
 	"app": {
 	  "background": {
-	    "scripts": ["background.js"]
+	    "scripts": ["background.js, brain.js"]
 	  }
 	},
 	"icons": { "16": "calculator-16.png", "128": "calculator-128.png" }
