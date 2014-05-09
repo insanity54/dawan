@@ -1,6 +1,6 @@
-(function(exports) {
+(function (exports) {
 
-    const addr = "http://dwane.co/";
+    addr = "http://dwane.co/";
     
 
     Brain.prototype.getConfig = function(uid, callback) {
