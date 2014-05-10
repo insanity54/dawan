@@ -140,6 +140,14 @@ app.get("/secret", function(req, res) {
     res.send(nconf.get('secret'));
 });
 
+app.get("/api/config/:uid", function(req, res) {
+    var uid = req.params.uid;
+
+    console.log("uid retrieved: " + uid);
+    res.send("uid retrieved: " + uid);
+});
+    
+
 app.use(express.static(__dirname + '/public'));
 
 server.listen(nconf.get('port'));
