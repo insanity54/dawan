@@ -1,9 +1,11 @@
 (function (exports) {
 
-    addr = "http://dwane.co/";
-    
+    //addr = "http://dwane.co";
+    addr = "http://monitor.twoway.net";
 
-    Brain.prototype.getConfig = function(uid, callback) {
+    function Brain(){};
+
+    Brain.getConfig = function(uid, callback) {
 	var xhr = this.createXhr();
 	xhr.open('GET', addr + '/api/config/' + uid, true);
 	xhr.onreadystatechange = function (evt) {
@@ -29,6 +31,8 @@
     };
 
     
+    exports.Brain = Brain;
     
 
 }(window));
+

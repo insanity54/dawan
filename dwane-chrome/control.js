@@ -12,10 +12,32 @@ var log = (function(){
 })();
 
 
-chrome.runtime.getBackgroundPage(function(brain) {
+chrome.runtime.getBackgroundPage(function(bgPage) {
 
-    brain.log.addListener(function(str) {
+    bgPage.log.addListener(function(str) {
 	log.output(str);
     });
 
+    document.getElementById('start').addEventListener('click', function() {
+	var uid=document.getElementById('uid').value;
+
+	// create object to communicate with brain
+	bgPage.startBrain();
+
+	
+	
+	log.output('start button clicked');
+	console.dir(bgPage.Brain);
+	log.output(bgPage.Brain.getConfig());
+    });
+
 });
+    
+//    setConnectedState(addr, port);
+//    bgPage.startServer(addr, port);
+
+    // get config from brain
+    // show user that it is started
+
+    
+
