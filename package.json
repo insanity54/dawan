@@ -7,16 +7,15 @@
     "start": "node app.js"
   },
   "dependencies": {
-      "nunjucks": "1.0.0",
-      "nconf": "0.6.8",
-      "express": "3.4.4",
-      "redis": "0.9.1",
-      "redis-jsonify": "0.0.4"
+    "nunjucks": "~1.0.0",
+    "nconf": "0.6.8",
+    "express": "3.4.4",
+    "redis": "0.9.1"
   },
   "author": "Chris Grimmett <chris@grimtech.net>",
   "license": "MIT",
   "repository": {
-      "type": "git",
-      "url": "git://github.com/insanity54/dawan"
+    "type": "git",
+    "url": "git://github.com/insanity54/dawan"
   }
 }

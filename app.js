@@ -6,7 +6,7 @@ var app = express();
 var server = http.createServer(app);
 var nconf = require('nconf');
 var redis = require('redis');
-var jsonify = require('redis-jsonify');
+var nunjucks = require('nunjucks');
 
 
 var client = redis.createClient(null, null, {"retry_max_delay": "180000"});
@@ -40,41 +40,18 @@ nconf.defaults({
 });
 
 
+// set some app-wide vars
+app.set('title', 'Dwane.co');
+app.set('port', nconf.get('port'));
 
-// redis helper function to stringify an object
-// thanks to http://stackoverflow.com/questions/18942089/storing-nested-javascript-objects-in-redis-nodejs
-// and node-memcached for the following two functions (see license ./LICENSE_node-memcached)
-var stringify = function(value) {
-    if (Buffer.isBuffer(value)) {
-	flag = FLAG_BINARAY;
-	value = value.toString('binary');
 
-    } else if (valuetype === 'number') {
-	flag = FLAG_NUMERIC;
-	value = value.toString();
+// nunjucks templating
+nunjucksEnv = new nunjucks.Environment( new nunjucks.FileSystemLoader(__dirname + '/tpl'), { autoescape: true });
+nunjucksEnv.express(app);
 
-    } else if (valuetype !== 'string') {
-	flag = FLAG_JSON;
-	value = JSON.stringify(value);
-    }
-}
+// express stuff
+app.use(express.logger('dev'));
 
-var parse = function(flag) {
-    switch (flag) {
-    case FLAG_JSON:
-        
-        dataSet = JSON.parse(dataSet);
-        break;
-    case FLAG_NUMERIC:
-        dataSet = +dataSet;
-        break;
-    case FLAG_BINARY:
-        tmp = new Buffer(dataSet.length);
-        tmp.write(dataSet, 0, 'binary');
-        dataSet = tmp;
-        break;
-    }
-}
 
 // DATABASE
 //
@@ -118,15 +95,13 @@ var users = {
     }
 } 
 
-client.set("users", users, function(err, result) {
-    client.get("users", function(err, result) {
-        console.dir(result);
-    });
-});
+// client.set("users", users, function(err, result) {
+//     client.get("users", function(err, result) {
+// 	console.log('result: ');
+//         console.dir(result);
+//     });
+// });
 
-
-app.set('views', __dirname + '/tpl');
-app.set('view engine', "nunjucks");
 
 
 //
@@ -150,4 +125,5 @@ app.get("/api/config/:uid", function(req, res) {
 
 app.use(express.static(__dirname + '/public'));
 
+console.log('server listening on port ' + nconf.get('port'));
 server.listen(nconf.get('port'));
