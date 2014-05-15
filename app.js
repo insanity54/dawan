@@ -7,27 +7,14 @@ var server = http.createServer(app);
 var nconf = require('nconf');
 var redis = require('redis');
 var nunjucks = require('nunjucks');
+var cors = require('cors');
 
+var red = redis.createClient(null, null, {"retry_max_delay": "180000"});
 
-var client = redis.createClient(null, null, {"retry_max_delay": "180000"});
-
-client.on("error", function(err) {
+red.on("error", function(err) {
     console.log("Error " + err);
 });
 
-
-// client.set("skey", "hello worldy", redis.print);
-// //client.hset("hkey", "hashtest 1", "someval", redis.print);
-// client.mset(["test keys 1", "test val 1", "test keys 2", "test val 2"], function (err, res) {});
-// client.hset(["hkey", "hashtestt 2", "some other valuee"], redis.print);
-// client.hkeys("hkey", function(err, replies) {
-//     console.log(replies.length + " replies: ");
-
-//     replies.forEach(function (reply, i) {
-//         console.log("    " + i + ": " + reply);
-//     });
-//     client.quit();
-// });
 
 
 // use these environment variables
@@ -43,6 +30,8 @@ nconf.defaults({
 // set some app-wide vars
 app.set('title', 'Dwane.co');
 app.set('port', nconf.get('port'));
+app.use(cors()); // CORS
+
 
 
 // nunjucks templating
@@ -118,6 +107,11 @@ app.get("/secret", function(req, res) {
 app.get("/api/config/:uid", function(req, res) {
     var uid = req.params.uid;
 
+    // @todo authenticate request
+    // @todo if authenticated
+    //   red.SET('user/' + uid + '/ip', req.usersIpAddress // @todo set users IP address to the requesting IP.
+    //   @todo send user's config to requesting client
+    
     console.log("uid retrieved: " + uid);
     res.send("uid retrieved: " + uid);
 });
