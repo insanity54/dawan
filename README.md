@@ -18,3 +18,12 @@ Work-in-progress task list
 - [ ] web GUI for user account creation, configuration, and management
 - [ ] client application which runs in user's LAN, sends IP address updates to server
 - [ ] server (backend) functionality which accepts IP address updates from user's client, stores it in a db.
+  - [ ] Add new user n to redis with client id x
+    - generate cid (openssl rand -hex 5) => x
+    - INCR user/index => n
+    - SET user/n/id x
+    - SET client/x n
+  - [ ] Add new machine n to redis and associate with user u
+    - INCR machine/index => n
+    - SET machine/n/owner u
+    - SADD user/u/machines n
