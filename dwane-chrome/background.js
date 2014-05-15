@@ -54,11 +54,20 @@ var log = (function(){
 
 function startBrain() {
     if (brain) {
-        brain.stop();
+        //brain.stop();
+	log.output('brain is already runnng');
     }
+    // create object to communicate with brain
     brain = new Brain();
-    
+    log.output('Starting');
+
+    brain.getConfig('12345', onGotConfig);
+    log.output(brain.getConfig());
+}
+
+function onGotConfig() {
+    log.output('got config');
 }
 
 
-
+    

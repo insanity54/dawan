@@ -1,3 +1,4 @@
+
 // quick terminal->textarea simulation
 var log = (function(){
   var area=document.querySelector("#log");
@@ -13,7 +14,7 @@ var log = (function(){
 
 
 chrome.runtime.getBackgroundPage(function(bgPage) {
-
+    
     bgPage.log.addListener(function(str) {
 	log.output(str);
     });
@@ -22,13 +23,12 @@ chrome.runtime.getBackgroundPage(function(bgPage) {
 	var uid=document.getElementById('uid').value;
 
 	// create object to communicate with brain
+	//log.output('start button clicked');
 	bgPage.startBrain();
 
-	
-	
-	log.output('start button clicked');
-	console.dir(bgPage.Brain);
-	log.output(bgPage.Brain.getConfig());
+//	brain = new Brain();
+//	log.output(brain.getConfig());
+
     });
 
 });
