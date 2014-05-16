@@ -167,7 +167,7 @@ app.get("/api/config/:id", function(req, res) {
 			    res.json({
 				"cid": cid,
 				"ip": ip,
-				"update-interval": u
+				"ui": u
 			    });
 			    
 			} else {
