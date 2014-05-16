@@ -104,19 +104,84 @@ app.get("/secret", function(req, res) {
     res.send(nconf.get('secret'));
 });
 
-app.get("/api/config/:uid", function(req, res) {
-    var uid = req.params.uid;
+app.get("/api/config/:id", function(req, res) {
+    var id = req.params.id;
     var ip = req.connection.remoteAddress;
 
     // @todo authenticate request
     // @todo if authenticated
-    //   red.SET('user/' + uid + '/ip', req.usersIpAddress // @todo set users IP address to the requesting IP.
-    //   @todo send user's config to requesting client
-    
-    console.log("uid retrieved: " + uid);
-    console.log("user IP: " + ip);
-    res.send("uid retrieved: " + uid);
+
+    // @todo user can put in a client id
+    //         - system will know it's a client ID
+    //         - send client configurations
+    //
+    //       OR
+    //
+    //       user can put in a User ID
+    //         - system knows its a uid
+    //         - create identity for this machine
+    //         - get this machine's cid or generate one
+
+
+    var cid = id; // @todo id type will be detected
+                  //       and turned into cid or uid dynamically
+
+    // unregistered cid?
+    red.GET('client/' + cid + '/owner', function(err, uid) {
+	if (err) throw err;
+
+	console.log("cid retrieved: " + cid);
+	console.log("user IP: " + ip);
+	console.log('user: ' + uid);
+	
+	if (uid == 'nil' || uid == null) {
+	    // client is unregistered
+	    console.log('client ' + cid + ' is unregistered');
+
+	    // @todo create a temporary account for the unreg user
+	    res.send('unregistered user ID!');
+
+	} else {
+	    // user exists in system
+	    // store user's reported IP along with the time & date
+	    var epoch = (new Date).getTime();
+
+	    // lifetime history of IPs this client has reported
+	    red.ZADD('user/' + uid + '/ip/lifetimez', epoch, ip, function(err, reply) {
+		if (err) throw err;
+		console.log('added user ' + uid +
+			    '\'s ip ' + ip +
+			    ' from client id ' + cid);
+
+		// recent history of IPs this client has reported
+		red.RPUSH('user/' + uid + '/ip/recents', ip + ' ' + epoch, function(err, reply) {
+		    if (err) throw err;
+		    console.log('recent history added');
+		    
+		    //   @todo send user's config to requesting client
+		    red.GET('client/' + cid + '/config/update-interval', function(err, u) {
+			
+			if (err) throw err;
+			if (u != null) {
+			    // we have the update interval	    
+			    res.json({
+				"cid": cid,
+				"ip": ip,
+				"update-interval": u
+			    });
+			    
+			} else {
+			    // update interval is not configured
+			    res.send('Hello, ' + cid + '. We logged your IP ' + ip);
+			}
+		    });
+		});
+
+	    });
+	}
+    });
 });
+
     
 
 app.use(express.static(__dirname + '/public'));
