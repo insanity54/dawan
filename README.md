@@ -18,12 +18,23 @@ Work-in-progress task list
 - [ ] web GUI for user account creation, configuration, and management
 - [ ] client application which runs in user's LAN, sends IP address updates to server
 - [ ] server (backend) functionality which accepts IP address updates from user's client, stores it in a db.
-  - [ ] Add new user n to redis with client id x
-    - generate cid (openssl rand -hex 5) => x
-    - INCR user/index => n
-    - SET user/n/id x
-    - SET client/x n
-  - [ ] Add new machine n to redis and associate with user u
-    - INCR machine/index => n
-    - SET machine/n/owner u
-    - SADD user/u/machines n
+  - [ ] Add new user *n* to redis with client id *x*
+    - generate cid (openssl rand -hex 5) => *x*
+    - INCR user/index => *n*
+    - SET user/*n*/id *x*
+    - SET client/*x* *n*
+  - [ ] Add new machine *n* to redis and associate with user *u*
+    - INCR machine/index => *n*
+    - SET machine/*n*/owner *u*
+    - SADD user/*u*/machines *n*
+  - [ ] Store recent history of machine IP addresses reported by the dwane client.
+    - Add received IP address *a* for machine *m* to the recent history.
+      - *e* = (new Date).getTime();  // e is epoch
+      - ZADD machine/*m*/ip/recentz *e* *a*
+      - Clear IP address updates older than admin configured value!
+  - [ ] Store lifetime history of all different IP addresses reported by the dwane client. This is for a screen with a table that shows, "All IP addresses received from this host: x, y, z", "first seen: xx, yy, zz"
+    - Store IP address *a* from machine *m* to the lifetime history
+      - ZSCORE machine/*m*/ip/lifetimez *a* => *s*  // has this IP address been reported before? returns the member's score which is epoch of when IP address was first seen. If it's new, *s* == nil.
+      - if ( *s* == nil )   // this is the first time the machine has reported this IP address.
+        - *e* = (new Date).getTime();  // e is epoch
+        - ZADD machine/*m*/ip/lifetimez *e* *a*

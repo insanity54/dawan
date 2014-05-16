@@ -106,6 +106,7 @@ app.get("/secret", function(req, res) {
 
 app.get("/api/config/:uid", function(req, res) {
     var uid = req.params.uid;
+    var ip = req.connection.remoteAddress;
 
     // @todo authenticate request
     // @todo if authenticated
@@ -113,6 +114,7 @@ app.get("/api/config/:uid", function(req, res) {
     //   @todo send user's config to requesting client
     
     console.log("uid retrieved: " + uid);
+    console.log("user IP: " + ip);
     res.send("uid retrieved: " + uid);
 });
     
