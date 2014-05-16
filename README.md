@@ -19,7 +19,7 @@ Work-in-progress task list
 - [ ] client application which runs in user's LAN, sends IP address updates to server
 - [ ] server (backend) functionality which accepts IP address updates from user's client, stores it in a db.
   - [ ] Add new user *n* to redis with client id *x*
-    - generate cid (openssl rand -hex 5) => *x*
+    - generate cid (openssl rand -hex 5) => *x* + '-0'
     - INCR user/index => *n*
     - SET user/*n*/id *x*
     - SET client/*x* *n*
@@ -38,3 +38,7 @@ Work-in-progress task list
       - if ( *s* == nil )   // this is the first time the machine has reported this IP address.
         - *e* = (new Date).getTime();  // e is epoch
         - ZADD machine/*m*/ip/lifetimez *e* *a*
+  - [ ] Create temporary account for new user. Temp user can register later using a server generated key.
+  - [ ] Users have configured update interval, which are overriden if user configures update intervals for individual clients.
+    - set client/*cid*/config/update-interval 300000
+    - set user/*uid*/config/update-interval 300000
