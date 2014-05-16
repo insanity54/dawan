@@ -11,8 +11,10 @@
     //addr = "http://dwane.co";
     var addr = "http://monitor.twoway.net:22454";
 
-    function Brain() {
+    function Brain(id) {
 
+	this.id = id;
+	
 	this.callbaks = {
 	    gotConfig: null,
 	};
@@ -21,13 +23,29 @@
 
     };
 
-    Brain.prototype.getConfig = function(uid, callback) {
+    Brain.prototype.update = function() {
 	var xhr = this.createXhr();
-	xhr.open('GET', addr + '/api/config/' + uid, true);
+	xhr.open('GET', addr + '/api/config/' + this.id, true);
 	xhr.onreadystatechange = function (evt) {
 	    if (xhr.readyState === 4) {
+		log(xhr.responseText);
+	    } else {
+		log('log: update failed.');
+		callback('update failed');
+	    }
+	}
+	xhr.send(null);
+    };
+
+    Brain.prototype.getConfig = function(id, callback) {
+	var xhr = this.createXhr();
+	xhr.open('GET', addr + '/api/config/' + id, true);
+	xhr.onreadystatechange = function (evt) {
+	    if (xhr.readyState === 4) {
+		log(xhr.responseText);
 		callback(xhr.responseText);
 	    } else {
+		log('failed to get config');
 		callback('get config request fial');
 	    }
 	}

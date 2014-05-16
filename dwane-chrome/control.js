@@ -19,12 +19,18 @@ chrome.runtime.getBackgroundPage(function(bgPage) {
 	log.output(str);
     });
 
+//    bgPage..addListner(function(conf) {
+//	
+//    });
+
     document.getElementById('start').addEventListener('click', function() {
 	var uid=document.getElementById('uid').value;
 
 	// create object to communicate with brain
 	//log.output('start button clicked');
-	bgPage.startBrain();
+	bgPage.startBrain(uid);
+
+
 
 //	brain = new Brain();
 //	log.output(brain.getConfig());
