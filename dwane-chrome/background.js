@@ -18,9 +18,10 @@ chrome.app.runtime.onLaunched.addListener(function() {
 		},
 		frame: 'chrome',
 	    },
-				     function(w) {
-					 commandWindow = w;
-				     });
+            function(w) {
+	        commandWindow = w;
+	    });
+
 	}
 });
 
@@ -66,7 +67,7 @@ function startBrain(id) {
 	log.output('Starting communications');
 	
 	// getConfig also updates IP address on server
-	brain.getConfig(id, onGotConfig);
+	brain.getConfig(id, onGotConfig); // @todo
 	
     } else {
 	// user ID was not supplied
@@ -88,13 +89,13 @@ function onGotConfig(conf) {
     }, conf.ui);
 }
 
-function setConfig(conf) {
+//function setConfig(conf) {
     // this should run after getConfig.
     // this sets the configurations for the update client
     // such as update interval
     
     
-}
+//}
 
 //function update(){ 
   // update the brain with the client's current ip address.
