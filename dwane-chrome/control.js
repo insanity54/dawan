@@ -20,17 +20,17 @@ chrome.runtime.getBackgroundPage(function(bgPage) {
 	log.output(str);
     });
 
-//    bgPage..addListner(function(conf) {
-//	
-//    });
+    // bgPage..addListner(function(conf) {
+    //	
+    // });
 
     document.getElementById('start').addEventListener('click', function() {
 	var uid=document.getElementById('uid').value;
 
 	// create object to communicate with brain
-	//log.output('start button clicked');
-//	chrome.storage.local.set({ 'config': { 'id': uid } });
-//	chrome.storage.local.config.id = uid;
+	// log.output('start button clicked');
+        // chrome.storage.local.set({ 'config': { 'id': uid } });
+        // chrome.storage.local.config.id = uid;
 
 	bgPage.startBrain(uid);
 	chrome.storage.local.set({ 'config': { 'id': uid } }, function() {
@@ -42,8 +42,8 @@ chrome.runtime.getBackgroundPage(function(bgPage) {
     });
 
 
-//	brain = new Brain();
-//	log.output(brain.getConfig());
+    // brain = new Brain();
+    // log.output(brain.getConfig());
 
     chrome.storage.local.get(null, function(items) {
 	document.getElementById('uid').value = items.config.id;
@@ -54,11 +54,11 @@ chrome.runtime.getBackgroundPage(function(bgPage) {
 
 });
     
-//    setConnectedState(addr, port);
-//    bgPage.startServer(addr, port);
+// setConnectedState(addr, port);
+// bgPage.startServer(addr, port);
 
-    // get config from brain
-    // show user that it is started
+// get config from brain
+// show user that it is started
 
     
 

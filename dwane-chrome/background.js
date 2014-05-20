@@ -78,17 +78,41 @@ function startBrain(id) {
 function onGotConfig(conf) {
     // get update-interval value and set this client's interval to that value
     conf = JSON.parse(conf);
-
     log.output('testing json. ' + conf.ui);
-
     console.log('');
 
+    updateLoop();
+    
     setInterval(function() {
+	
 	brain.update();
 
     }, conf.ui);
 }
 
+
+function updateLoop() {
+    // update loop
+    log.output('update loop');
+    console.log('update loop');
+
+    // get time of last update
+    // get time of now
+    // if time elapsed since last update is greater than update-interval    
+
+    //   update
+    //   set time of last update to now
+
+    var now = Date.now() 
+    
+
+    if (now - lastUpdate > update-interval) {
+	var lastUpdate = 
+	updateLoop(lastUpdate)
+    }
+    
+
+}
 //function setConfig(conf) {
     // this should run after getConfig.
     // this sets the configurations for the update client

@@ -11,8 +11,8 @@ var config = {
 // if config in chrome.storage is undefined (configs have not been set)
 // then set defaults
 console.log('chrome storage----> ' + chrome.storage.local.get('config', function(items) {
-//    console.log('items.config'
-//    console.dir(items);
+    // console.log('items.config'
+    // console.dir(items);
 }));
 	    
 
