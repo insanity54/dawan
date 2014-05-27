@@ -55,6 +55,8 @@ var log = (function(){
 
 
 function startBrain(id) {
+    continueUpdate = true;    
+    
     if (id) {
 	// user ID was supplied
 	
@@ -85,30 +87,36 @@ function onGotConfig(conf) {
     // get update-interval value and set this client's interval to that value
     console.dir(conf);
     conf = JSON.parse(conf);
-    log.output('testing json. ' + conf.updateInterval);
-    console.log('');
+    log.output('update interval rec\'d from server: ' + conf.updateInterval);
 
-    updateLoop(updateInterval);
+    updateLoop(conf.updateInterval);
     
-//    setInterval(function() {
-	
-//	brain.update();
-
-//    }, conf.ui);
 }
 
 
-function updateLoop(updateInterval) {
+function updateLoop(interval, lastUpdate) {
+    // if lastUpdate is undefined, lastUpdate is made to be 0
+    lastUpdate = typeof lastUpdate !== 'undefined' ? lastUpdate : 0;
 
-    // update loop
-    if (updateInterval == undefined) {
-	log.output('update loop');
-	console.log('update loop');
-	
-    } else {
-	log.output('update loop with last update ' + updateInterval);
-	console.log('update loop with last update ' + updateInterval);
-    }
+    setTimeout(function() {
+	console.log('update loop every ' + interval + ' ms ' +
+		    'with last update at ' + lastUpdate);	  
+
+	if (continueUpdate == true) {
+	    brain.update();
+	    updateLoop(interval, lastUpdate);
+	}
+
+    }, interval);
+}
+
+
+
+    
+//    log.output('update loop every ' + interval + ' ms ' +
+//	       'with last update at ' + lastUpdate);
+
+
 
 
     // get time of last update
@@ -118,20 +126,20 @@ function updateLoop(updateInterval) {
     //   update
     //   set time of last update to now
 
-    var now = Date.now();
+//     var now = Date.now();
+//     //console.log('now is ' + now);
+//     //log.output('now is ' + now);
 
-    if (now - lastUpdate > conf.updateInterval) {
+//     if (now - lastUpdate > interval) {
 	
-	// do an update
-	lastUpdate = now;
-	brain.update();
+// 	// do an update
+// 	lastUpdate = now;
 
-	// if looping is supposed to continue, continue
-	if (continueUpdate == true) updateLoop(lastUpdate);
-    }
-    
 
-}
+// 	// if looping is supposed to continue, continue
+//     }
+
+// }
 //function setConfig(conf) {
     // this should run after getConfig.
     // this sets the configurations for the update client

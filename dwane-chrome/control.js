@@ -25,13 +25,16 @@ chrome.runtime.getBackgroundPage(function(bgPage) {
     // });
 
     document.getElementById('start').addEventListener('click', function() {
-	var uid=document.getElementById('uid').value;
+	// change the start button to a stop button
+	var startBtn = document.getElementById('start');
+	var stopBtn = document.getElementById('stop');
+	startBtn.style.display = 'none';
+	startBtn.disabled = true;
+	stopBtn.style.display = 'block';
+	stopBtn.disabled = false;
 	
-
-	// create object to communicate with brain
-	// log.output('start button clicked');
-        // chrome.storage.local.set({ 'config': { 'id': uid } });
-        // chrome.storage.local.config.id = uid;
+	// get user or client id entered in box
+	var uid=document.getElementById('uid').value;
 
 	bgPage.startBrain(uid);
 	chrome.storage.local.set({ 'config': { 'id': uid } }, function() {
@@ -43,8 +46,19 @@ chrome.runtime.getBackgroundPage(function(bgPage) {
     });
 
 
-    // brain = new Brain();
-    // log.output(brain.getConfig());
+    document.getElementById('stop').addEventListener('click', function() {
+	// change the start button to a stop button
+	var startBtn = document.getElementById('start');
+	var stopBtn = document.getElementById('stop');
+	startBtn.style.display = 'block';
+	startBtn.disabled = false;
+	stopBtn.style.display = 'none';
+	stopBtn.disabled = true;
+
+	bgPage.stopBrain();
+
+    });
+
 
     chrome.storage.local.get(null, function(items) {
 	document.getElementById('uid').value = items.config.id;
