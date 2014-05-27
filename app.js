@@ -8,6 +8,8 @@ var nconf = require('nconf');
 var redis = require('redis');
 var nunjucks = require('nunjucks');
 var cors = require('cors');
+//var passport = require('passport');
+//var passport-google-o
 
 var red = redis.createClient(null, null, {"retry_max_delay": "180000"});
 
@@ -68,21 +70,21 @@ app.use(express.logger('dev'));
 
 
 
-var users = {
-    "account": {
-        "name": "george henry",
-        "email": "george@example.com",
-        "password": "taco",
-        "type": 1,
-    },
+// var users = {
+//     "account": {
+//         "name": "george henry",
+//         "email": "george@example.com",
+//         "password": "taco",
+//         "type": 1,
+//     },
 
-    "config": {
-        "wans": "1",
-        "update_time": [
-            3000, 6000
-        ]
-    }
-} 
+//     "config": {
+//         "wans": "1",
+//         "update_time": [
+//             3000, 6000
+//         ]
+//     }
+// } 
 
 // client.set("users", users, function(err, result) {
 //     client.get("users", function(err, result) {
