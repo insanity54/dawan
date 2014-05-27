@@ -1,13 +1,16 @@
 {
-	"name":	"Dwane",
-	"description":	"A spiffy DDNS updater client for use with the http://dwane.co service",
-	"version": "0.0.0",
-	"app": {
-	  "background": {
-	    "scripts": ["background.js", "brain.js"]
+    "name":	"Dwane",
+    "description":	"A spiffy DDNS updater client for use with the http://dwane.co service",
+    "version": "0.0.0",
+    "app": {
+	    "background": {
+	      "scripts": ["background.js", "brain.js"]
 	  }
 	},
-	"icons": { "16": "calculator-16.png", "128": "calculator-128.png" }
+    "icons": { "16": "calculator-16.png", "128": "calculator-128.png" },
+    "permissions": [
+	"storage"
+	]
 }
 	    
 	
