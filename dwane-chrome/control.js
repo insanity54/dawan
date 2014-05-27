@@ -26,6 +26,7 @@ chrome.runtime.getBackgroundPage(function(bgPage) {
 
     document.getElementById('start').addEventListener('click', function() {
 	var uid=document.getElementById('uid').value;
+	
 
 	// create object to communicate with brain
 	// log.output('start button clicked');

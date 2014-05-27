@@ -1,5 +1,6 @@
 var brain;
 var controlWindow;
+var continueUpdate = true;
 
 /**
  * Create control panel window when app is started
@@ -75,26 +76,40 @@ function startBrain(id) {
     }
 }
 
+function stopBrain() {
+    continueUpdate = false;
+    log.output('Stopped.');
+}
+
 function onGotConfig(conf) {
     // get update-interval value and set this client's interval to that value
+    console.dir(conf);
     conf = JSON.parse(conf);
-    log.output('testing json. ' + conf.ui);
+    log.output('testing json. ' + conf.updateInterval);
     console.log('');
 
-    updateLoop();
+    updateLoop(updateInterval);
     
-    setInterval(function() {
+//    setInterval(function() {
 	
-	brain.update();
+//	brain.update();
 
-    }, conf.ui);
+//    }, conf.ui);
 }
 
 
-function updateLoop() {
+function updateLoop(updateInterval) {
+
     // update loop
-    log.output('update loop');
-    console.log('update loop');
+    if (updateInterval == undefined) {
+	log.output('update loop');
+	console.log('update loop');
+	
+    } else {
+	log.output('update loop with last update ' + updateInterval);
+	console.log('update loop with last update ' + updateInterval);
+    }
+
 
     // get time of last update
     // get time of now
@@ -103,12 +118,16 @@ function updateLoop() {
     //   update
     //   set time of last update to now
 
-    var now = Date.now() 
-    
+    var now = Date.now();
 
-    if (now - lastUpdate > update-interval) {
-	var lastUpdate = 
-	updateLoop(lastUpdate)
+    if (now - lastUpdate > conf.updateInterval) {
+	
+	// do an update
+	lastUpdate = now;
+	brain.update();
+
+	// if looping is supposed to continue, continue
+	if (continueUpdate == true) updateLoop(lastUpdate);
     }
     
 

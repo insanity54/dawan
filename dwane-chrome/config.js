@@ -3,8 +3,8 @@
 // Config defaults
 var config = {
     'id': '5432',
-    'update-interval': 600000,
-    'config-interval': 900000
+    'updateInterval': 600000,
+    'configInterval': 900000
 }
 
 
