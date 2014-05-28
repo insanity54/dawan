@@ -31,6 +31,15 @@ Work-in-progress task list
     - INCR machine/index => *n*
     - SET machine/*n*/owner *u*
     - SADD user/*u*/machines *n*
+  - [ ] Network aliases (subdomains) for users
+    - [ ] Create new alias in db
+      - Create alias *a* belonging to user id *u*
+        and set alias forward to updater client IP *c*
+        - SET alias/*a*/owner *u*
+	- SET alias/*a*/forward *c*
+    - [ ] Get alias owner from db
+    - [ ] Update alias owner or forward
+    - [ ] Delete alias
   - [x] Store recent history of machine IP addresses reported by the dwane client.
     - Add received IP address *a* for machine *m* to the recent history.
       - *e* = (new Date).getTime();  // e is epoch
