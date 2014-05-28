@@ -33,8 +33,7 @@ Work-in-progress task list
     - SADD user/*u*/machines *n*
   - [ ] Network aliases (subdomains) for users
     - [ ] Create new alias in db
-      - Create alias *a* belonging to user id *u*
-        and set alias forward to updater client IP *c*
+      - Create alias *a* belonging to user id *u* and set alias forward to updater client IP *c*
         - SET alias/*a*/owner *u*
 	- SET alias/*a*/forward *c*
     - [ ] Get alias owner from db
