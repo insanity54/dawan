@@ -70,7 +70,7 @@ function startBrain(id) {
 	log.output('Starting communications');
 	
 	// getConfig also updates IP address on server
-	brain.getConfig(id, onGotConfig); // @todo
+	brain.getConfig(id, onGotConfig);
 	
     } else {
 	// user ID was not supplied
@@ -90,23 +90,31 @@ function onGotConfig(conf) {
     log.output('update interval rec\'d from server: ' + conf.updateInterval);
 
     updateLoop(conf.updateInterval);
-    
 }
 
 
 function updateLoop(interval, lastUpdate) {
     // if lastUpdate is undefined, lastUpdate is made to be 0
-    lastUpdate = typeof lastUpdate !== 'undefined' ? lastUpdate : 0;
+    //lastUpdate = typeof lastUpdate !== 'undefined' ? lastUpdate : 0;
 
     setTimeout(function() {
 	console.log('update loop every ' + interval + ' ms ' +
-		    'with last update at ' + lastUpdate);	  
+		    'with last update at ' + lastUpdate);
 
 	if (continueUpdate == true) {
-	    brain.update();
+	    // Update server with client's IP address
+	    brain.update(function(err, reply) {
+		if (err) {
+		    console.log('error: ' + err);
+		    
+		} else {
+		    console.log('update successful: ' + reply);
+		}
+	    });
+
+	    // keep looping
 	    updateLoop(interval, lastUpdate);
 	}
-
     }, interval);
 }
 

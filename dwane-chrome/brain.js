@@ -23,15 +23,18 @@
 
     };
 
-    Brain.prototype.update = function() {
+    Brain.prototype.update = function(callback) {
+
 	var xhr = this.createXhr();
 	xhr.open('GET', addr + '/api/config/' + this.id, true);
 	xhr.onreadystatechange = function (evt) {
 	    if (xhr.readyState === 4) {
-		log(xhr.responseText);
-	    } else {
-		log('log: update failed.');
-		callback('update failed');
+		// request finished and response is ready
+		//callback(null, xhr.repsponseText);
+		callback(null, xhr.status + ': ' + xhr.responseText);
+		
+	    //} else {
+            //callback(xhr.readyState, null);
 	    }
 	}
 	xhr.send(null);
@@ -42,12 +45,10 @@
 	xhr.open('GET', addr + '/api/config/' + id, true);
 	xhr.onreadystatechange = function (evt) {
 	    if (xhr.readyState === 4) {
+		// request finished and response is ready
 		log(xhr.responseText);
 		callback(xhr.responseText);
-	    } else {
-		log('failed to get config');
-		callback('get config request fial');
-	    }
+	    } 
 	}
 	xhr.send(null);
     };
