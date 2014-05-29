@@ -22,11 +22,11 @@ Work-in-progress task list
     - [x] Basic update interval timer
     - [ ] Authentication
 - [ ] server (backend) functionality which accepts IP address updates from user's client, stores it in a db.
-  - [ ] Add new user *n* to redis with client id *x*
-    - generate cid (openssl rand -hex 5) => *x* + '-0'
+  - [ ] Add *n*th user with *uid* to redis
+    - generate uid (openssl rand -hex 5) => *uid*
+    - add uid generator version to end of uid. *uid* = *uid* + '-0'
     - INCR user/index => *n*
-    - SET user/*n*/id *x*
-    - SET client/*x* *n*
+    - SET user/*uid*/number *n*
   - [ ] Add new machine *n* to redis and associate with user *u*
     - INCR machine/index => *n*
     - SET machine/*n*/owner *u*
