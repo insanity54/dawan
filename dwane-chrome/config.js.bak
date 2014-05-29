@@ -1,0 +1,52 @@
+
+
+// Config defaults
+var config = {
+    'id': '5432',
+    'cid': '1234',
+    'updateInterval': 600000,
+    'configInterval': 900000
+}
+
+
+var guid = (function() {
+    function s4() {
+	return Math.floor((1 + Math.random()) * 0x10000)
+	    .toString()
+	    .substring(1);
+    }
+    return function() {
+	return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+	    s4() + '-' + s4() + s4() + s4();
+    };
+})();
+
+
+// if config in chrome.storage is undefined (configs have not been set)
+// then set defaults
+chrome.storage.local.get('config', function(items) {
+    console.log('chrome storage----> ');
+    console.dir(items);
+});
+	    
+
+chrome.storage.local.get('config', function(items) {
+    if (items == undefined) {
+	
+	console.log('config is undefined. setting configs');
+	saveConfig();
+    } else {
+	console.log('config is defined. ALL GOOD');
+    }
+});
+
+
+function configure(key, value) {
+    config[key] = value;
+    saveConfig();
+}
+
+
+function saveConfig() {
+    chrome.storage.local.config = config;
+}
