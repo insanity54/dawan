@@ -5,7 +5,11 @@ var client = function(app) {
     
 
 
-    // @todo put this in a separate file along with routes using this
+    /**
+     * guid
+     *
+     * generate a random guid
+     */
     var guid = (function() {
 	function s4() {
 	    return Math.floor((1 + Math.random()) * 0x10000)
@@ -196,10 +200,6 @@ var client = function(app) {
     }
 
 
-//    function getUser(req, res, next) {
-//	db.
-//    }
-
     function verifyClientOwner(req, res, next) {
 	console.log('::verifyClientowner');
 	// get cid
@@ -268,11 +268,35 @@ var client = function(app) {
 	db.getClientConfig(cid, function(err, config) {
 	    if (err) res.send('database error 2388');
 
-	    config.cid = ip;
+	    config.cid = cid;
 	    config.ip = ip;
 	    res.json(config);
 	});
     }
+
+    function generateCid(req, res, next) {
+	console.log('::generateCid');
+	var uid = req.dwane.uid;
+	var cid = guid();
+
+	req.dwane.cid = cid;
+	next();
+    }
+
+    function registerCid(req, res, next) {
+	console.log('::registerCid');
+	var cid = req.dwane.cid;
+	var uid = req.dwane.uid;
+	if (!cid) res.send('could not retrieve CID from buffer', 500);	
+	if (!uid) res.send('could not retrieve UID from buffer', 500);
+
+	db.setClientOwner(cid, uid, function(err, reply) {
+	    if (err) res.send('database error 2389');
+	    next();
+	});
+    }
+
+
 
 
     /**
@@ -289,8 +313,10 @@ var client = function(app) {
 
     /**
      * Updater client is sending us an update
-     *
-     * 
+     *   - does this as ofen as configured by updateInterval
+     *   - sever validates request
+     *   - server logs client's IP address
+     *   - server replies with client configuration
      */
     app.get("/api/config/:uid/:cid",
 	    getReqUid,
@@ -305,6 +331,24 @@ var client = function(app) {
 	   );
 	    
 	    
+    
+    /**
+     * Updater client is registering
+     *   - does this on first run.
+     *   - sends server a user ID
+     *   - server generates and sends client a client ID
+     */
+    app.get("/api/config/:uid",
+	    getReqUid,
+	    getReqIP,
+	    validateUid,
+	    generateCid,
+	    registerCid,
+	    sendClientConfig
+	   );
+	    
+	    
+
 	    
 	    
 	    // 1) validate uid & cid

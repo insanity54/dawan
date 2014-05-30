@@ -139,6 +139,17 @@ function setClientRecentIP(cid, ip, epoch, callback) {
 	      });
 }
 
+function setClientOwner(cid, uid, callback) {
+    red.SET('client/' + cid + '/owner', uid, function(err) {
+	if (err) return callback(err);
+
+	red.SADD('user/' + uid + '/clients', cid, function(err, reply) {
+	    if (err) return callback(err);
+	    callback(null, reply);
+	});
+    });
+}
+
 
 
 module.exports = {
@@ -151,4 +162,5 @@ module.exports = {
 
     setClientLifetimeIP: setClientLifetimeIP,
     setClientRecentIP: setClientRecentIP,
+    setClientOwner: setClientOwner
 }
