@@ -1,5 +1,6 @@
 
 
+
 // quick terminal->textarea simulation
 var log = (function(){
   var area=document.querySelector("#log");
@@ -20,10 +21,6 @@ chrome.runtime.getBackgroundPage(function(bgPage) {
 	log.output(str);
     });
 
-    // bgPage..addListner(function(conf) {
-    //	
-    // });
-
     document.getElementById('start').addEventListener('click', function() {
 	// change the start button to a stop button
 	var startBtn = document.getElementById('start');
@@ -35,11 +32,14 @@ chrome.runtime.getBackgroundPage(function(bgPage) {
 	
 	// get user or client id entered in box
 	var uid=document.getElementById('uid').value;
+//	log.output('uid equals: ' + uid);
+//	if (typeof uid == undefined) uid = 'fart'; //defaults.uid;
+	    
 
 	bgPage.startBrain(uid);
-	chrome.storage.local.set({ 'config': { 'id': uid } }, function() {
-	    chrome.storage.local.get('config', function(items) {
-		log.output('herrs yo items: ' + items);
+	chrome.storage.local.set({ 'id': uid }, function() {
+	    chrome.storage.local.get(null, function(items) {
+		log.output('herrs yo items: ');
 		console.dir(items);
 	    });
 	});
@@ -61,7 +61,7 @@ chrome.runtime.getBackgroundPage(function(bgPage) {
 
 
     chrome.storage.local.get(null, function(items) {
-	document.getElementById('uid').value = items.config.id;
+	document.getElementById('uid').value = items.id;
 	console.dir(items);
     });
 

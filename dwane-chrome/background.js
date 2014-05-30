@@ -27,6 +27,19 @@ chrome.app.runtime.onLaunched.addListener(function() {
 });
 
 
+var guid = (function() {
+    function s4() {
+	return Math.floor((1 + Math.random()) * 0x10000)
+	    .toString(16)
+	    .substring(1);
+    }
+    return function() {
+	return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+	    s4() + '-' + s4() + s4() + s4();
+    };
+})();
+
+
 // event logger                                                                 
 var log = (function(){
     var logLines = [];
@@ -55,27 +68,41 @@ var log = (function(){
 
 
 function startBrain(id) {
-    continueUpdate = true;    
-    
-    if (id) {
-	// user ID was supplied
-	
-	if (brain) {
-            //brain.stop();
-	    log.output('brain is already runnng');
-	}
+    continueUpdate = true;
 
-	// create object to communicate with brain
-	brain = new Brain(id);
-	log.output('Starting communications');
-	
-	// getConfig also updates IP address on server
-	brain.getConfig(id, onGotConfig);
-	
-    } else {
-	// user ID was not supplied
-	log.output('No user ID entered. Please enter a user ID');
-    }
+    // if local client ID does not exist, create one
+    cidExists(function(exists) {
+	if (!exists) generateCid(function(err, cid) {
+	    if (err) log.output(err);
+	    log.output('here is your unique cid: ' + cid)
+
+	    chrome.storage.local.get(null, function(items) {	    
+		console.log('here is local config: ' + items);
+		console.dir(items);
+	    });
+
+    
+	    if (id) {
+		// user ID was supplied
+		
+		if (brain) {
+		    //brain.stop();
+		    log.output('brain is already runnng');
+		}
+		
+		// create object to communicate with brain
+		brain = new Brain(id);
+		log.output('Starting communications');
+		
+		// getConfig also updates IP address on server
+		brain.getConfig(id, cid, onGotConfig);
+		
+	    } else {
+		// user ID was not supplied
+		log.output('No user ID entered. Please enter a user ID');
+	    }
+	});
+    });
 }
 
 function stopBrain() {
@@ -119,46 +146,25 @@ function updateLoop(interval, lastUpdate) {
 }
 
 
+function cidExists(callback) {
+    console.log('clog: cidExists func');
+    log.output('logo: cidExists func');
 
-    
-//    log.output('update loop every ' + interval + ' ms ' +
-//	       'with last update at ' + lastUpdate);
-
-
-
-
-    // get time of last update
-    // get time of now
-    // if time elapsed since last update is greater than update-interval    
-
-    //   update
-    //   set time of last update to now
-
-//     var now = Date.now();
-//     //console.log('now is ' + now);
-//     //log.output('now is ' + now);
-
-//     if (now - lastUpdate > interval) {
-	
-// 	// do an update
-// 	lastUpdate = now;
+    chrome.storage.local.get(null, function(items) {
+	if (items.cid == undefined) {
+	    callback(false);
+	    
+	} else {
+	    callback(true);
+	}
+    });
+}
 
 
-// 	// if looping is supposed to continue, continue
-//     }
+function generateCid(callback) {
+    var cid = guid();
 
-// }
-//function setConfig(conf) {
-    // this should run after getConfig.
-    // this sets the configurations for the update client
-    // such as update interval
-    
-    
-//}
-
-//function update(){ 
-  // update the brain with the client's current ip address.
-  // does not retrieve user configurations
-
-//  brain.update();
-//}
+    chrome.storage.local.set({ 'cid': cid }, function() {
+	callback(null, cid);	
+    });
+}

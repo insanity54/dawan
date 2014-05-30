@@ -40,9 +40,9 @@
 	xhr.send(null);
     };
 
-    Brain.prototype.getConfig = function(id, callback) {
+    Brain.prototype.getConfig = function(id, cid, callback) {
 	var xhr = this.createXhr();
-	xhr.open('GET', addr + '/api/config/' + id, true);
+	xhr.open('GET', addr + '/api/config/' + id + '/' + cidp, true);
 	xhr.onreadystatechange = function (evt) {
 	    if (xhr.readyState === 4) {
 		// request finished and response is ready
