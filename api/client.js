@@ -65,64 +65,6 @@ var client = function(app) {
 
 
 
-
-    var toType = function(obj) {
-	return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
-    }
-
-
-
-    function getAliasOwner(req, res, next) {
-	var alias = req.params.alias;
-
-	db.getAliasOwner(alias, function(err, owner) {
-	    if (err) next(err);
-	    req.dwane.owner = owner;
-	    next();
-	});
-    }
-
-    function getAliasMap(req, res, next) {
-	db.getAliasMap(req.alias, function(err, cid) {
-	    if (err) next(err);
-	    req.dwane.cid = cid;
-	    next();
-	});
-    }
-	    
-    function getAlias(req, res, next) {
-	req.dwane = {};
-	req.dwane.alias = req.params.alias;
-	next();
-    }
-
-
-    function getClientLatestIP(req, res, next) {
-	db.getClientLatestIP(req.dwane.cid, function(err, ip) {
-	    if (err) next(err);
-	    req.dwane.ip = ip;
-	    next();
-	});
-    }
-
-    function redirectVisitor(req, res) {
-	res.redirect('http://' + req.dwane.ip);
-    }
-
-
-    /**
-     * Get a user's alias and redirect to network
-     * of their updater client
-     */
-    app.get("/:alias",
-	    getAlias,
-	    getAliasMap,
-	    getClientLatestIP,
-	    redirectVisitor
-	   );
-	    
-
-
 	
 	// 1) get requested alias from params
 	// 2) get client IP that alias points to
@@ -150,50 +92,235 @@ var client = function(app) {
 	//     - LRANGE /client/<cid>/ip/recentl -1 -1
         //
 
-		
 
-	
-	// red.GET('alias/' + alias + '/owner', function(err, owner) {
-	//     // get client IP
+    var toType = function(obj) {
+	return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
+    }
+
+
+
+    function getAliasOwner(req, res, next) {
+	console.log('::getAliasOwner');
+	var alias = req.params.alias;
+
+	db.getAliasOwner(alias, function(err, owner) {
+	    if (err) next(err);
+	    if (owner) { req.dwane.owner = owner; next(); }
+	    res.send('no owner of specified alias');
+	});
+    }
+
+    function getAliasMap(req, res, next) {
+	console.log('::getAliasMap');
+	db.getAliasMap(req.dwane.alias, function(err, cid) {
+	    if (err) res.send('problem with database getting alias map');
+	    console.log('alias map: ' + cid);
+	    if (cid) { req.dwane.cid = cid; return next(); }
+	    res.send('could not get map of specified alias');
+	});
+    }
 	    
-	//     red.LRANGE('user/1/ip/recentl', -1, -1, function(err, mostRecent) {
-	// 	// mostRecent is an array containing a string in the format,
-	// 	// "000.000.000.000 tttttttttttt" where 0's are Ip address
-	// 	// and ttt is time when the IP address was logged.
+    function getReqAlias(req, res, next) {
+	console.log('::getReqAlias');
+	var alias = req.params.alias;
+	if (alias) {
+	    if (!req.dwane) req.dwane = {};
+	    req.dwane.alias = alias;
+	    return next();
+	}
+	res.send('didn\'t receive Alias in request');
+    }
 
-	// 	// We only want the IP address in this case,
-	// 	// so we get the string (containing ip + time) (array element 0)
-	// 	// and split the string at the space, creating another array
-	// 	// of the ip [0], and the time [1]. We keep the IP.
-	// 	mostRecent = mostRecent[0].split(' ')[0];
 
-	// 	console.log('alias ' + alias + ' most recent: ' + mostRecent);
-	// 	console.log(toType(mostRecent));
+    function getReqUid(req, res, next) {
+	console.log('::getReqUid');
+	var uid = req.params.uid;
+	if (uid) {
+	    if (!req.dwane) req.dwane = {};
+	    req.dwane.uid = uid;
+	    return next();
+	}
+	res.send('didn\'t receive UID in request');
+    }
 
-	// 	res.redirect('http://' + mostRecent);
-	//     });
-	// });
+    function getReqCid(req, res, next) {
+	console.log('::getReqCid');
+	var cid = req.params.cid;
+	if (cid) {
+	    if (!req.dwane) req.dwane = {};
+	    req.dwane.cid = cid;
+	    return next();
+	}
+	res.send('didn\'t receive CID in request');
+    }
 
+    function getReqIP(req, res, next) {
+	console.log('::getReqIP');
+	if (!req.dwane) req.dwane = {};
+	var ip = req.connection.remoteAddress;
+	if (ip) {
+	    if (!req.dwane) req.dwane = {};
+	    req.dwane.ip = ip;
+	    return next();
+	}
+	res.send('couldn\'t get IP from client');
+    }
     
-    // // @todo user should be able to submit just a client id,
-    // //       as long as that client ID is already registered on the server
-    // //
-    // /**
-    //  * Updater client is sending us an update
-    //  *
-    //  * @todo this should probably be a PUT or PUT not a GET
-    //  */
-    // app.get("/api/config/:uid/:cid", function(req, res) {
+    function getClientLatestIP(req, res, next) {
+	console.log('::getClientLatestIP');
+	db.getClientLatestIP(req.dwane.cid, function(err, ip) {
+	    if (err) res.send('could not get client\'s latest IP');
+	    if (ip) { req.dwane.ip = ip; next(); }
+	});
+    }
+
+    function redirectVisitor(req, res) {
+	console.log('::redirectVisitor');
+	res.redirect('http://' + req.dwane.ip);
+    }
+
+    function validateUid(req, res, next) {
+	console.log('::validateUid');
+    	if (/[a-fA-F0-9]{10}-\d/.test(req.dwane.uid)) {
+	    return next();
+	}
+	res.send('invalid uid');
+    }
+    
+    function validateCid(req, res, next) {
+	console.log('::validateCid');
+	if (/[a-fA-F0-9]{8}(-[a-fA-F0-9]{4}){3}-[a-fA-F0-9]{12}/.test(req.dwane.cid)) {
+	    return next();
+	}
+	res.send('invalid cid');
+    }
+
+
+//    function getUser(req, res, next) {
+//	db.
+//    }
+
+    function verifyClientOwner(req, res, next) {
+	console.log('::verifyClientowner');
+	// get cid
+	// get uid
+	// id cid owner uid?
+
+	var cid = req.dwane.cid;
+	var uid = req.dwane.uid;
+
+	db.getClientOwner(cid, function(err, owner) {
+	    if (err) res.send('database error 2384');
+	    if (owner == uid) next();
+	});
+    }
+
+    function validateUser(req, res, next) {
+	console.log('::validateuser');
+	// @todo some authentication here would be nice
+
+	var uid = req.dwane.uid;
+
+	db.getUser(uid, function(err, number) {
+	    if (err) res.send('database error 2385');
+	    if (number) next();
+	});
+    }
+
+    function logClientIP(req, res, next) {
+	console.log('::logClientIP');
+	var ip = req.dwane.ip;
+	var cid = req.dwane.cid;
+	if (!ip) res.send('could not retrieve IP from buffer', 500);
+	if (!cid) res.send('could not retrieve client ID from buffer', 500);
+
+	var counter = 0;
+        var epoch = (new Date).getTime();
+
+	db.setClientLifetimeIP(cid, ip, epoch, function(err, success) {
+	    if (err) res.send('database error 2386');
+
+	    db.setClientRecentIP(cid, ip, epoch, function(err, success) {
+		if (err) res.send('database error 2387');
+		next();
+	    });
+	});
+    }
+
+    function sendClientConfig(req, res) {
+	console.log('::sendClientConfig');
+	var ip = req.dwane.ip;
+	var cid = req.dwane.cid;
+
+	if (!ip) res.send('could not retrieve IP from buffer', 500);
+	if (!cid) res.send('could not retrieve cid from buffer', 500);
+
+	// get client config from db
+	// get client ip from request buffer
+	// send config
+
+	// config = {
+	//     "cid": cid,
+	//     "ip": ip,
+	//     "updateInterval": interval
+	// };
+
+	db.getClientConfig(cid, function(err, config) {
+	    if (err) res.send('database error 2388');
+
+	    config.cid = ip;
+	    config.ip = ip;
+	    res.json(config);
+	});
+    }
+
+
+    /**
+     * Get a user's alias and redirect to network
+     * of their updater client
+     */
+    app.get("/api/alias/:alias",
+	    getReqAlias,
+	    getAliasMap,
+	    getClientLatestIP,
+	    redirectVisitor
+	   );
+	    
+
+    /**
+     * Updater client is sending us an update
+     *
+     * 
+     */
+    app.get("/api/config/:uid/:cid",
+	    getReqUid,
+	    getReqCid,
+	    getReqIP,
+	    validateUid,
+	    validateCid,
+	    verifyClientOwner,
+	    validateUser,
+	    logClientIP,
+	    sendClientConfig
+	   );
+	    
+	    
+	    
+	    
+	    // 1) validate uid & cid
+	    // 2) register cid if new // @todo implement
+	    // 2) make sure requested cid belongs to requested uid
+	    // 3) if user exists in system, store reported ip with time & date
+	    // 4) send client's config to requesting client
+	    
+	    
+
+    // 	    function(req, res) {
     // 	var uid = req.params.uid;
     // 	var cid = req.params.cid;
     // 	var ip = req.connection.remoteAddress;
 
-    // 	// validate uid & cid
-    // 	if (/[a-fA-F0-9]{10}-\d/.test(uid)) {
-    // 	    // uid valid
-	    
-    // 	    if (/[a-fA-F0-9]{8}(-[a-fA-F0-9]{4}){3}-[a-fA-F0-9]{12}/.test(cid)) {
-    // 		// cid valid
+
 
     // 		// unregistered cid?
     // 		red.GET('client/' + cid + '/owner', function(err, uid) {
