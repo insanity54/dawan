@@ -15,12 +15,14 @@ var log = (function(){
 })();
 
 
+
 chrome.runtime.getBackgroundPage(function(bgPage) {
     
     bgPage.log.addListener(function(str) {
 	log.output(str);
     });
 
+    
     document.getElementById('start').addEventListener('click', function() {
 	// change the start button to a stop button
 	var startBtn = document.getElementById('start');
@@ -36,13 +38,17 @@ chrome.runtime.getBackgroundPage(function(bgPage) {
 //	if (typeof uid == undefined) uid = 'fart'; //defaults.uid;
 	    
 
-	bgPage.startBrain(uid);
-	chrome.storage.local.set({ 'id': uid }, function() {
-	    chrome.storage.local.get(null, function(items) {
-		log.output('herrs yo items: ');
-		console.dir(items);
-	    });
+	bgPage.bucket.setKey('uid', uid, function(err, reply) {
+	    if (err) return log.output(err);
 	});
+	
+	bgPage.startBrain(uid);
+	// chrome.storage.local.set({ 'id': uid }, function() {
+	//     chrome.storage.local.get(null, function(items) {
+	// 	log.output('herrs yo items: ');
+	// 	console.dir(items);
+	//     });
+	// });
     });
 
 
@@ -60,13 +66,11 @@ chrome.runtime.getBackgroundPage(function(bgPage) {
     });
 
 
-    chrome.storage.local.get(null, function(items) {
-	document.getElementById('uid').value = items.id;
-	console.dir(items);
+    bgPage.bucket.getDefaults(function(defaults) {
+	document.getElementById('uid').value = defaults.uid;
+	console.log('defaults: ');
+	console.dir(defaults);
     });
-
-
-
 });
     
 // setConnectedState(addr, port);
