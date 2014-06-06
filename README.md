@@ -34,8 +34,10 @@ Work-in-progress task list
   - [ ] Network aliases (subdomains) for users
     - [ ] Create new alias in db
       - Create alias *a* belonging to user id *u* and set alias forward to updater client IP *c*
+        - SISMEMBER alias/alls *a* => ?    If true, ERROR!!!
         - SET alias/*a*/owner *u*
 	- SET alias/*a*/forward *c*
+	- SADD alias/alls *a*
     - [ ] Get alias owner from db
     - [ ] Update alias owner or forward
     - [ ] Delete alias

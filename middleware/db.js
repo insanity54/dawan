@@ -95,8 +95,8 @@ function getAliasMap(alias, callback) {
  */
 function getClientLatestIP(cid, callback) {
     red.LRANGE('client/' + cid + '/ip/recentl', -1, -1, function(err, update) {
-	if (err) callback(err, null);
-	if (update == false) return ( callback('getClientLatestIP: update not received', null));
+	if (err) return callback(err, null);
+	if (update == false) return callback(null, undefined);
 
         // update is an array containing a range of redis elements that
 	// matched our query. Since we only got one element, (-1 to -1) we want
