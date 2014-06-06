@@ -8,8 +8,7 @@ var nconf = require('nconf');
 var redis = require('redis');
 var nunjucks = require('nunjucks');
 var cors = require('cors');
-var dns = require('native-dns');
-var dnsserver = dns.createServer();
+
 //var passport = require('passport');
 //var passport-google-o
 
@@ -357,32 +356,6 @@ app.get("/", function(req, res) {
 // api endpoints
 require('./api/client')(app);
 
-
-dnsserver.on('request', function(req, res) {
-    console.log('dns request: ' + req);
-    res.answer.push(dns.A({
-	name: req.question[0].name,
-	address: '127.0.0.1',
-	ttl: 600,
-    }));
-    res.answer.push(dns.A({
-	name: request.question[0].name,
-	address: '127.0.0.2',
-	ttl: 600,
-    }));
-    res.additional.push(dns.A({
-	name: 'hostA.example.org',
-	address: '127.0.0.3',
-	ttl: 600,
-    }));
-    res.send();
-});
-
-dnsserver.on('error', function(err, buf, req, res) {
-    console.log(err.stack);
-});
-    
-dnsserver.serve(15353);
 
 app.use(express.static(__dirname + '/public'));
 
