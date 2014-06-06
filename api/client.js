@@ -114,20 +114,33 @@ var client = function(app) {
 	});
     }
 
+    /**
+     * getAliasMap
+     *
+     * Finds the owner (cid) of the alias req.dwane.alias
+     */
     function getAliasMap(req, res, next) {
 	console.log('::getAliasMap');
 	db.getAliasMap(req.dwane.alias, function(err, cid) {
 	    if (err) res.send('problem with database getting alias map');
 	    console.log('alias map: ' + cid);
 	    if (cid) { req.dwane.cid = cid; return next(); }
-	    res.send('could not get map of specified alias');
+	    res.send('could not get map alias: ' + req.dwane.alias);
 	});
     }
 	    
     function getReqAlias(req, res, next) {
 	console.log('::getReqAlias');
 	var alias = req.params.alias;
+        
 	if (alias) {
+            // an alias was in the request.
+
+            // if alias is in the format 'alias.dwane.co' (sent to us by nginx)
+            // then we discard the 'dwane.co'
+            var match = alias.match(/[^.]+\./);
+            if (match) alias = match[0];
+
 	    if (!req.dwane) req.dwane = {};
 	    req.dwane.alias = alias;
 	    return next();
@@ -303,7 +316,7 @@ var client = function(app) {
      * Get a user's alias and redirect to network
      * of their updater client
      */
-    app.get("/api/alias/:alias",
+    app.get("/client/home/:alias",
 	    getReqAlias,
 	    getAliasMap,
 	    getClientLatestIP,
