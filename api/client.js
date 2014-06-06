@@ -138,7 +138,7 @@ var client = function(app) {
 
             // if alias is in the format 'alias.dwane.co' (sent to us by nginx)
             // then we discard the 'dwane.co'
-            var match = alias.match(/[^.]+\./);
+            var match = alias.match(/[^.]+/);
             if (match) alias = match[0];
 
 	    if (!req.dwane) req.dwane = {};
@@ -184,10 +184,11 @@ var client = function(app) {
     }
     
     function getClientLatestIP(req, res, next) {
-	console.log('::getClientLatestIP');
+	console.log('api::client::getClientLatestIP');
 	db.getClientLatestIP(req.dwane.cid, function(err, ip) {
-	    if (err) res.send('could not get client\'s latest IP');
-	    if (ip) { req.dwane.ip = ip; next(); }
+	    if (err) res.send('could not get client\'s latest IP: ' + err);
+	    if (typeof ip != 'undefined') { req.dwane.ip = ip; return next(); }
+	    res.send('updater client has not sent the server an IP update');
 	});
     }
 
