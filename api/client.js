@@ -188,7 +188,7 @@ var client = function(app) {
     	if (/[a-fA-F0-9]{10}-\d/.test(req.dwane.uid)) {
 	    return next();
 	}
-	res.send('invalid uid');
+	res.send('invalid uid: ' + req.dwane.uid, 400);
     }
     
     function validateCid(req, res, next) {
