@@ -17,7 +17,7 @@ red='\e[0;31m'
 green='\e[0;32m'
 nc='\e[0m'
 
-## find the dir of the script
+## find the dir of this script
 bindir="$(dirname "$(readlink -fn "$0")")"
 
 ## programs this installer handles
@@ -25,6 +25,7 @@ bindir="$(dirname "$(readlink -fn "$0")")"
 ## they will be queued for installation
 queueNode=0
 queueCowsay=0
+queueNginx=0
 
 
 ##
@@ -41,7 +42,7 @@ queueCowsay=0
 ## @param check  0 for unchecked (fail) or
 ##               1 for checked (pass)
 ##
-function checkBox {
+function passBox {
     if [[ $2 -eq 0 ]]; then
         echo -e "$1:  [${red}FAIL${nc}]"
     else
@@ -53,27 +54,47 @@ function checkBox {
 ## check install dependencies
 function checkDeps {
 
-    echo "Checking dependencies..."
+    echo -e "\nChecking dependencies...\n"
     
-    node -v &> /dev/null  ## check installed node version
+    ## check installed node version
+    node -v &> /dev/null
     if [[ $? -ne 0 ]]; then
         ## node is not installed
-        echo $(checkBox node 0)
+        echo $(passBox node 0)
         queueNode=1
     else
-        echo $(checkBox node 1)
+        echo $(passBox node 1)
     fi
 
 
 
-    fart -v &> /dev/null
+    ## check installed cowsay
+    dpkg -s cowsay &> /dev/null
     if [[ $? -ne 0 ]]; then
-        ## frt is not installed
-        echo $(checkBox fart 0)
+        ## cowsay is not installed
+        echo $(passBox cowsay 0)
+        queueCowsay=1
     else
-        echo $(checkBox fart 1)
+        echo $(passBox cowsay 1)
     fi
+
+
+
+    ## check installed nginx
+    dpkg -s nginx &> /dev/null
+    if [[ $? -ne 0 ]]; then
+        ## nginx is not installed
+        echo $(passBox nginx 0)
+        queueNginx=1
+    else
+        echo $(passBox nginx 1)
+    fi
+
+    echo
 }
+
+
+
 
 function installNode {
 
@@ -84,27 +105,29 @@ function installNode {
     ./configure
     fakeroot checkinstall -y --install=no --pkgversion $(echo $(pwd) | sed -n -re's/.+node-v(.+)$/\1/p') make -j$(($(nproc)+1)) install
     dpkg -i node_*
-        
 }
 
 function installCowsay {
-
     apt-get -y install cowsay
+}
 
+function installNginx {
+    apt-get -y install nginx
+
+    cp $bindir/setup/dwane_nginx /etc/nginx/sites-available/dwane
+    ln -s /etc/nginx/sites-available/dwane /etc/nginx/sites-enabled/dwane
+
+    rm /etc/nginx/sites-enabled/default
 }
 
 function installDeps {
 
     if [[ $queueNode -eq 1 ]]; then installNode; fi
     if [[ $queueCowsay -eq 1 ]]; then installCowsay; fi
-        
+    if [[ $queueNginx -eq 1 ]]; then installNginx; fi
 }
 
 
-## install dependencies
-#apt-get update
-#apt-get -y install nginx
-#sudo ln -s /etc/nginx/sites-available/dwane /etc/nginx/sites-enabled/dwane
 
 ##
 ## RUNNER

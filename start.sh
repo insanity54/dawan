@@ -27,9 +27,9 @@ else
     read port
     
     touch $bindir/config.json
-    echo "{"                   >> $bindir/config.json
+    echo "{"                             >> $bindir/config.json
     echo "  \"port\": \"$port\""         >> $bindir/config.json
-    echo "}"                   >> $bindir/config.json
+    echo "}"                             >> $bindir/config.json
 
     if [[ $? -eq 0 ]]; then
         # there were no errors generating config
