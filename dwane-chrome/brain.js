@@ -8,8 +8,8 @@
 
 (function (exports) {
 
-    //addr = "http://dwane.co";
-    var addr = "http://monitor.twoway.net:22454";
+    var addr = "http://dwane.co";
+    //var addr = "http://monitor.twoway.net:22454";
 
     function Brain() {
 	console.log('im a real boy');

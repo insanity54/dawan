@@ -103,6 +103,9 @@ function startBrain(id) {
 		    log.output('Register attempt. rceived: ' + JSON.stringify(conf));
 		    log.output('registered. received cid: ' + conf.cid);
 		    
+		    // add uid to conf
+		    // omg this is some of the worst code I've ever written
+		    conf.uid = id;
 		    
 		    // save config sent by sever
 		    bucket.setConfig(conf, function(err, conf) {

@@ -41,7 +41,9 @@ chrome.runtime.getBackgroundPage(function(bgPage) {
 	bgPage.bucket.setKey('uid', uid, function(err, reply) {
 	    if (err) return log.output(err);
 	});
-	
+
+	console.log('starting brain with uid: ' + uid);
+	log.output('starting brain with uid: ' + uid);
 	bgPage.startBrain(uid);
 	// chrome.storage.local.set({ 'id': uid }, function() {
 	//     chrome.storage.local.get(null, function(items) {
