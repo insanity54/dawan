@@ -79,7 +79,7 @@ function getAliasOwner(alias, callback) {
  * @param {String} alias    the alias (subdomain)
  */
 function getAliasMap(alias, callback) {
-    red.GET('alias/' + alias + '/client', function(err, cid) {
+    red.GET('alias/' + alias + '/map', function(err, cid) {
 	if (err) callback(err, null);
 	callback(null, cid);
     });

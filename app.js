@@ -102,9 +102,9 @@ app.use(express.logger('dev'));
 //
 // ROUTES
 //
-app.get("/", function(req, res) {
-    res.send('hello thank you for visiting');
-});
+//app.get("/", function(req, res) {
+//    res.send('hello thank you for visiting');
+//});
 
 // app.get("/secret", function(req, res) {
 //     res.send(nconf.get('secret'));

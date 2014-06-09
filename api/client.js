@@ -91,7 +91,7 @@ var client = function(app) {
 
         // Anon user connecting to alias
         //   - needs to know what client the alias is mapped to
-	//     - GET /alias/<alias>/client => cid
+	//     - GET /alias/<alias>/map => cid
         //   - needs to know the latest IP of that client
 	//     - LRANGE /client/<cid>/ip/recentl -1 -1
         //
@@ -106,6 +106,7 @@ var client = function(app) {
     function getAliasOwner(req, res, next) {
 	console.log('::getAliasOwner');
 	var alias = req.params.alias;
+	if (!alias) res.send('could not retrieve alias from buffer', 500);
 
 	db.getAliasOwner(alias, function(err, owner) {
 	    if (err) next(err);
@@ -121,11 +122,14 @@ var client = function(app) {
      */
     function getAliasMap(req, res, next) {
 	console.log('::getAliasMap');
-	db.getAliasMap(req.dwane.alias, function(err, cid) {
+	var alias = req.params.alias;
+	if (!alias) res.send('could not retrieve alias from buffer', 500);
+	
+	db.getAliasMap(alias, function(err, cid) {
 	    if (err) res.send('problem with database getting alias map');
 	    console.log('alias map: ' + cid);
 	    if (cid) { req.dwane.cid = cid; return next(); }
-	    res.send('could not get map alias: ' + req.dwane.alias);
+	    res.send('could not get map of alias: ' + alias);
 	});
     }
 	    
@@ -250,6 +254,8 @@ var client = function(app) {
 
 	var counter = 0;
         var epoch = (new Date).getTime();
+
+	console.log(  'logging client ' + cid + ' ip');
 
 	db.setClientLifetimeIP(cid, ip, epoch, function(err, success) {
 	    if (err) res.send('database error 2386');
