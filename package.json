@@ -13,7 +13,8 @@
     "redis": "0.9.1",
     "cors": "~2.3.1",
     "passport": "~0.2.0",
-    "passport-google-oauth": "~0.1.5"
+    "passport-google-oauth": "~0.1.5",
+    "passport-37signals": "~1.0.0"
   },
   "author": "Chris Grimmett <chris@grimtech.net>",
   "license": "MIT",

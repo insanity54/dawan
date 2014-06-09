@@ -21,18 +21,21 @@ red.on("error", function(err) {
 
 
 // use these environment variables
-nconf.env(['port', 'secret', 'password'])
+nconf.env(['PORT', 'SECRET', 'PASSWORD'])
      .file({ file: 'config.json' });
 
 
 nconf.defaults({
-    'port': '8080',
+    'PORT': '22454',
 });
 
 
 // set some app-wide vars
 app.set('title', 'Dwane.co');
-app.set('port', nconf.get('port'));
+app.set('port', nconf.get('PORT'));
+app.set('thirty7ClientId', nconf.get('THIRTY7CLIENTID'));
+app.set('thirty7ClientSecret', nconf.get('THIRTY7CLIENTSECRET'));
+app.set('thirty7CallbackUrl', nconf.get('THIRTY7CALLBACKURL'));
 app.use(cors()); // CORS
 
 
@@ -359,5 +362,5 @@ require('./api/client')(app);
 
 app.use(express.static(__dirname + '/public'));
 
-console.log('server listening on port ' + nconf.get('port'));
-server.listen(nconf.get('port'));
+console.log('server listening on port ' + nconf.get('PORT'));
+server.listen(nconf.get('PORT'));
