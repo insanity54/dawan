@@ -27,6 +27,7 @@ var cp = function(app) {
 	console.log('::getReqUser');
 	if (req.isAuthenticated) {
 	    console.log('[++] user is authentted: ' + req.isAuthenticated);
+
 	} else {
 	    console.log('[--] user is not auth');
 	}
@@ -55,6 +56,7 @@ var cp = function(app) {
 
     function renderCP(req, res) {
 	console.log('::renderCP');
+	console.log('req.user: ' + req.user);
 	res.render('index.html');
     }
 

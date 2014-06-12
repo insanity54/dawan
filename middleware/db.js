@@ -128,20 +128,50 @@ function getClientLatestIP(cid, callback) {
 	console.dir(update);
 	var ip = update[0].split(" ")[0];
 	
-	callback(null, ip);
+	return callback(null, ip);
     });
 }
 
 function getBasecampUser(bcuid, callback) {
+    console.log('db::getBasecampUser');
     red.GET('user/basecamp/' + bcuid + '/uid', function(err, uid) {
+	console.log('db::getBasecampUser: got uid/bcuid: ' + uid + '/' + bcuid);
 	if (err) return callback(err, null);  // db error
-	if (uid) return callback(null, uid);  // uid for this bcuid is not set 
-	setBasecampUser(bcuid, function(err, uid) {   // create new user
+	if (uid) return callback(null, uid);  // uid for this bcuid is not set
+
+	red.SET('user/basecamp/' + bcuid + '/uid', uid, function(err, good) {
+	    console.log('set basecamp user ' + good + ' tyvm');
 	    if (err) return callback(err, null);
-	    callback(null, true);
+	    if (!good) return callback(null, null);
+	    return callback(null, good);
+	});	
+
+
+	// setBasecampUser(bcuid, function(err, good) {   // create new user
+	//     console.log('db::getBasecampuser setting new basecamp user');
+	//     if (err) return callback(err, null);
+	//     if (!good) return callback('could not set new bc user', null);
+	//     return callback(null, true);
+	// });
+    });
+}
+
+
+function createUser(callback) {
+    
+    red.INCR('user/index', function(err, number) {
+	if (err) return callback(err, null);
+
+	generateUid(function(err, uid) {
+	    if (err) return callback(err, null);
+	    if (!uid) return callback('could not generate uid', null);
+
+	    red.
+	    
 	});
     });
 }
+
 
 function generateUid(callback) {
     randomHex = child.spawn('openssl', ['rand', '-hex',  '5']);
@@ -165,7 +195,6 @@ function validateUid(uid, callback) {
 }
 
 function getUid(callback) {
-
     generateUid(function(err, uid) {
 	if (err) return callback(err, null);
 	if (!uid) return callback('could not generate uid', null);
@@ -183,16 +212,20 @@ function getUid(callback) {
  * creates new basecamp user
  * (called by getBasecampUser... not exported.)
  */
-// function setBasecampUser(bcuid, callback) {
-//     // generate uid   (openssl rand -hex 5) + '-0' => uid
-//     // create uidn    INCR user/index => SET user/*uid*/number uidn
-//     //                SET  user/*uid*/clients
-//     //                
+function setBasecampUser(bcuid, callback) {
+    // generate uid   (openssl rand -hex 5) + '-0' => uid
+    // create uidn    INCR user/index => SET user/*uid*/number uidn
+    //                SET  user/*uid*/clients
+    //                
 
+    red.SET('user/basecamp/' + bcuid + '/uid', uid, function(err, good) {
+	console.log('set basecamp user ' + good + ' tyvm');
+	if (err) return callback(err, null);
+	if (!good) return callback(null, null);
+	return callback(null, good);
+    });
+}
     
-//     red.SET('user/basecamp/' + bcuid + '/uid',
-//             //ccc @todo idk finish this
-//           }
 
 function setClientLifetimeIP(cid, ip, epoch, callback) {
     red.ZADD('client/' + cid + '/ip/lifetimez',

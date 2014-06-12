@@ -147,9 +147,8 @@ var auth = function(app) {
             function(req, res) {
 
 		// successful authentication, redirect home.
-                //console.log('auth.js::app.get - req.user:' + req.user); 
-                res.redirect('/');
-		//res.send('all happy');
+                console.log('auth.js::app.get - req.user:' + req.user); 
+                res.redirect('/admin/' + req.user);
             });
            
     passport.use(new Thirty7SignalsStrategy({
@@ -176,8 +175,7 @@ var auth = function(app) {
 	var bcuid = profile.id;
 	//done(null, bcuid);
 
-	
-        db.findOrCreateBasecamp(bcuid, function(err, uid) {
+        db.getBasecampUser(bcuid, function(err, uid) {
             // done is a passport.js 'verify callback.'
             // in a server exeption, set err to non-null value.
             // in an auth failure, err remains null, and use
@@ -185,12 +183,10 @@ var auth = function(app) {
             // more info: http://passportjs.org/guide/configure/
 
             // @todo possibility for future: get user's basecamp info we need
-            console.log('FUID: ' + fuid + ' => UID: ' + uid);
+            console.log('BCUID: ' + bcuid + ' => UID: ' + uid);
             done(null, uid);
         });
-
     }));
-    
 }
 
 
