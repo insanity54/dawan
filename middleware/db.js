@@ -1,5 +1,6 @@
 var redis = require('redis');
 var red = redis.createClient(null, null, {"retry_max_delay": "180000"});
+var child = require('child_process');
 
 
 /**
@@ -13,6 +14,17 @@ function getUser(uid, callback) {
     });
 }
 
+/**
+ * getUserClients
+ *
+ * Get the clients belonging to a user 
+ */
+function getUserClients(uid, callback) {
+    red.SMEMBERS('user/' + uid + '/clients', function(err, clients) {
+	if (err) return callback(err, null);
+	callback(null, clients);
+    });
+}
 
 /**
  * getClientOwner
@@ -79,7 +91,7 @@ function getAliasOwner(alias, callback) {
  * @param {String} alias    the alias (subdomain)
  */
 function getAliasMap(alias, callback) {
-    red.GET('alias/' + alias + '/client', function(err, cid) {
+    red.GET('alias/' + alias + '/map', function(err, cid) {
 	if (err) callback(err, null);
 	callback(null, cid);
     });
@@ -117,8 +129,64 @@ function getClientLatestIP(cid, callback) {
     });
 }
 
+function getBasecampUser(bcuid, callback) {
+    red.GET('user/basecamp/' + bcuid + '/uid', function(err, uid) {
+	if (err) return callback(err, null);  // db error
+	if (uid) return callback(null, uid);  // uid for this bcuid is not set 
+	setBasecampUser(bcuid, function(err, uid) {   // create new user
+	    if (err) return callback(err, null);
+	    callback(null, true);
+	});
+    });
+}
 
+function generateUid(callback) {
+    randomHex = child.spawn('openssl', ['rand', '-hex',  '5']);
+    randomHex.stdout.on('data', function(data) callback(null, data + '-0'); );
+    randomHex.stderr.on('data', function(data) callback(data, null); );
+    randomHex.on('close', function(code) console.log('child process exited with code ' + code); );
+}
 
+/**
+ * validateUid
+ *
+ * checks newly generated uid
+ * VALID if uid does not already exist in db
+ */
+function validateUid(uid, callback) {
+    red.GET('user/' + uid + '/number', function(err, exists) {
+	if (err) return callback(err, null);
+	if (exists) return callback(null, false);  // this uid exists already; invalid uid.
+	return callback(null, true);               // this uid doesn't exist; valid uid.
+    });
+}
+
+function getUid(callback) {
+    generateUid(err, uid) {
+	if (err) return callback(err, null);
+	if (!uid) return callback('could not generate uid', null);
+	
+	validateUid(uid, function(err, valid) {
+	    if (err) return callback(err, null);
+	    if (!valid) //ccc @todo recurse until valid uid generated
+	});
+}
+
+/**
+ * setBasecampUser
+ *
+ * creates new basecamp user
+ * (called by getBasecampUser... not exported.)
+ */
+function setBasecampUser(bcuid, callback) {
+    // generate uid   (openssl rand -hex 5) + '-0' => uid
+    // create uidn    INCR user/index => SET user/*uid*/number uidn
+    //                SET  user/*uid*/clients
+    //                
+
+    
+    red.SET('user/basecamp/' + bcuid + '/uid', 
+}
 
 function setClientLifetimeIP(cid, ip, epoch, callback) {
     red.ZADD('client/' + cid + '/ip/lifetimez',
@@ -126,16 +194,30 @@ function setClientLifetimeIP(cid, ip, epoch, callback) {
 	     ip,
 	     function(err, reply) {
 		 if (err) callback(err);
-		 callback(null, reply);
+
+		 red.ZREMRANGEBYRANK('client/' + cid + '/ip/lifetimez',
+				     0, 99,
+				     function(err, reply) {
+					 if (err) callback(err);
+					 callback(null, reply);
+				     });
 	     });
 }
 
 function setClientRecentIP(cid, ip, epoch, callback) {
-    red.RPUSH('client/' + cid + '/ip/recentl',
+    red.LPUSH('client/' + cid + '/ip/recentl',
 	      ip + ' ' + epoch,
 	      function(err, reply) {
 		  if (err) callback(err);
-		  callback(null, reply);
+
+		  // keep only last 100 log entries
+		  red.LTRIM('client/' + cid + '/ip/recentl',
+			    0, 99,
+			    function(err, reply) {
+				if (err) callback(err);
+
+				callback(null, reply);
+			    });
 	      });
 }
 
@@ -159,6 +241,8 @@ module.exports = {
     getClientOwner: getClientOwner,
     getClientConfig: getClientConfig,
     getUser: getUser,
+    getUserClients: getUserClients,
+    getBasecampUser: getBasecampUser,
 
     setClientLifetimeIP: setClientLifetimeIP,
     setClientRecentIP: setClientRecentIP,

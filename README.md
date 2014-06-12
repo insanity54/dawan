@@ -33,10 +33,10 @@ Work-in-progress task list
     - SADD user/*u*/machines *n*
   - [ ] Network aliases (subdomains) for users
     - [ ] Create new alias in db
-      - Create alias *a* belonging to user id *u* and set alias forward to updater client IP *c*
-        - SISMEMBER alias/alls *a* => ?    If true, ERROR!!!
+      - Create alias *a* belonging to user id *u* and map alias to updater client *c* IP
+        - SISMEMBER alias/alls *a* => ?    If true, ERROR!!! (alias already exists)
         - SET alias/*a*/owner *u*
-	- SET alias/*a*/forward *c*
+	- SET alias/*a*/map *c*
 	- SADD alias/alls *a*
     - [ ] Get alias owner from db
     - [ ] Update alias owner or forward
@@ -59,3 +59,25 @@ Work-in-progress task list
   - [ ] Server must validate client's update request.
     - [ ] Server must not allow client to update more often than it's configured uptateInterval
     - [ ] Server must authenticate client
+  - [ ] DNS server for the subdomains
+    - [ ] Respond to iterative queries with one of these four possible responses
+      - The answer to the query accompanied by any CNAME records (aliases) that may be useful. The response will indicate that the data is cached. (since we can't guarantee the user's IP is updated)
+      - An error indicating the domain or host does not exist (NXDOMAIN). This response may also contain CNAME records that pointed to the non-existing host.
+      - A temporary error indication, for instance, can't access other DNS's due to network error etc...
+      - A referral: we received a query to a zone that isn't dwane.co
+  - [ ] User and Admin Control Panel
+    - [ ] Authentication
+    - [ ] Account creation
+    - [ ] display of lifetime IP updates
+    - [ ] display of recent IP updates
+    
+
+
+
+Attribution
+-----------
+
+DNS Concepts from zytrax.com http://www.zytrax.com/books/dns/ch2/#iterative (CC-BY-NC 4.0 License)
+
+Dashboard Bootstrap Template from http://www.bootply.com/download/85861 (MIT License)
+

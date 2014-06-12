@@ -8,8 +8,8 @@ var nconf = require('nconf');
 var redis = require('redis');
 var nunjucks = require('nunjucks');
 var cors = require('cors');
+var passport = require('passport');
 
-//var passport = require('passport');
 //var passport-google-o
 
 var red = redis.createClient(null, null, {"retry_max_delay": "180000"});
@@ -21,19 +21,27 @@ red.on("error", function(err) {
 
 
 // use these environment variables
-nconf.env(['port', 'secret', 'password'])
+nconf.env(['PORT', 'SECRET', 'PASSWORD'])
      .file({ file: 'config.json' });
 
 
 nconf.defaults({
-    'port': '8080',
+    'PORT': '22454',
 });
 
 
 // set some app-wide vars
 app.set('title', 'Dwane.co');
-app.set('port', nconf.get('port'));
+app.set('port', nconf.get('PORT'));
+app.set('thirty7ClientId', nconf.get('THIRTY7CLIENTID'));
+app.set('thirty7ClientSecret', nconf.get('THIRTY7CLIENTSECRET'));
+app.set('thirty7CallbackUrl', nconf.get('THIRTY7CALLBACKURL'));
 app.use(cors()); // CORS
+app.use(express.static(__dirname + '/public'));
+app.use(express.cookieParser());
+app.use(express.session({ secret: 'omgwer123 changeme' }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 	
@@ -41,7 +49,7 @@ app.use(cors()); // CORS
 
 
 // nunjucks templating
-nunjucksEnv = new nunjucks.Environment( new nunjucks.FileSystemLoader(__dirname + '/tpl'), { autoescape: true });
+nunjucksEnv = new nunjucks.Environment( new nunjucks.FileSystemLoader(__dirname + '/public'), { autoescape: true });
 nunjucksEnv.express(app);
 
 // express stuff
@@ -102,9 +110,9 @@ app.use(express.logger('dev'));
 //
 // ROUTES
 //
-app.get("/", function(req, res) {
-    res.send('hello thank you for visiting');
-});
+//app.get("/", function(req, res) {
+//    res.send('hello thank you for visiting');
+//});
 
 // app.get("/secret", function(req, res) {
 //     res.send(nconf.get('secret'));
@@ -353,11 +361,15 @@ app.get("/", function(req, res) {
 
 // });
 
+
+
 // api endpoints
-require('./api/client')(app);
+require('./api/client')(app);    // updater client interface
+require('./api/auth')(app);      // user authentication
+require('./api/cp')(app);        // user/admin web-based control panel
 
 
-app.use(express.static(__dirname + '/public'));
 
-console.log('server listening on port ' + nconf.get('port'));
-server.listen(nconf.get('port'));
+
+console.log('server listening on port ' + nconf.get('PORT'));
+server.listen(nconf.get('PORT'));

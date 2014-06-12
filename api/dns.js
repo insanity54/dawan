@@ -31,7 +31,6 @@ server.on('listening', function(req, res) {
     console.log('server listening');
 });
 
-
 server.on('error', function(err, buf, req, res) {
     console.log(err.stack);
 });
@@ -43,5 +42,6 @@ server.on('socketError', function(err, socket) {
 server.on('close', function(req, res) {
     console.log('server closed.');
 });
+
 
 server.serve(53);
