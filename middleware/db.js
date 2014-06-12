@@ -73,6 +73,7 @@ function getClientUpdateInterval(cid, callback) {
  * Finds the owner of a dwane alias (subdomain)
  *
  * @param {string} alias   the alias to find owner of
+ * @callback callback      (err, uid)
  */
 function getAliasOwner(alias, callback) {
     red.GET('alias/' + alias + '/owner', function(err, owner) {
@@ -89,8 +90,10 @@ function getAliasOwner(alias, callback) {
  * Gets the client that the specified alias is mapped to
  *
  * @param {String} alias    the alias (subdomain)
+ * @callback callback       (err, cid)
  */
 function getAliasMap(alias, callback) {
+    console.log('db::alias' + alias);
     red.GET('alias/' + alias + '/map', function(err, cid) {
 	if (err) callback(err, null);
 	callback(null, cid);
@@ -142,9 +145,9 @@ function getBasecampUser(bcuid, callback) {
 
 function generateUid(callback) {
     randomHex = child.spawn('openssl', ['rand', '-hex',  '5']);
-    randomHex.stdout.on('data', function(data) callback(null, data + '-0'); );
-    randomHex.stderr.on('data', function(data) callback(data, null); );
-    randomHex.on('close', function(code) console.log('child process exited with code ' + code); );
+    randomHex.stdout.on('data', function(data) { callback(null, data + '-0'); });
+    randomHex.stderr.on('data', function(data) { callback(data, null); });
+    randomHex.on('close', function(code) { console.log('child process exited with code ' + code); });
 }
 
 /**
@@ -162,14 +165,18 @@ function validateUid(uid, callback) {
 }
 
 function getUid(callback) {
-    generateUid(err, uid) {
+    generateUid(function(err, uid) {
 	if (err) return callback(err, null);
 	if (!uid) return callback('could not generate uid', null);
 	
-	validateUid(uid, function(err, valid) {
-	    if (err) return callback(err, null);
-	    if (!valid) //ccc @todo recurse until valid uid generated
-	});
+	// validateUid(uid, function(err, valid) {
+	//     if (err) return callback(err, null);
+	//     if (!valid) getUid() { }; //ccc @todo recurse until valid uid generated
+
+
+                
+	//         });
+    });
 }
 
 /**
@@ -178,15 +185,16 @@ function getUid(callback) {
  * creates new basecamp user
  * (called by getBasecampUser... not exported.)
  */
-function setBasecampUser(bcuid, callback) {
-    // generate uid   (openssl rand -hex 5) + '-0' => uid
-    // create uidn    INCR user/index => SET user/*uid*/number uidn
-    //                SET  user/*uid*/clients
-    //                
+// function setBasecampUser(bcuid, callback) {
+//     // generate uid   (openssl rand -hex 5) + '-0' => uid
+//     // create uidn    INCR user/index => SET user/*uid*/number uidn
+//     //                SET  user/*uid*/clients
+//     //                
 
     
-    red.SET('user/basecamp/' + bcuid + '/uid', 
-}
+//     red.SET('user/basecamp/' + bcuid + '/uid',
+//             //ccc @todo idk finish this
+//           }
 
 function setClientLifetimeIP(cid, ip, epoch, callback) {
     red.ZADD('client/' + cid + '/ip/lifetimez',
