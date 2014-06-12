@@ -165,17 +165,15 @@ function validateUid(uid, callback) {
 }
 
 function getUid(callback) {
+
     generateUid(function(err, uid) {
 	if (err) return callback(err, null);
 	if (!uid) return callback('could not generate uid', null);
 	
-	// validateUid(uid, function(err, valid) {
-	//     if (err) return callback(err, null);
-	//     if (!valid) getUid() { }; //ccc @todo recurse until valid uid generated
-
-
-                
-	//         });
+	validateUid(uid, function(err, valid) {
+	    if (err) return callback(err, null);
+	    if (!valid) return callback('generated uid already exists', null); //ccc @todo recurse until valid uid generated
+	});
     });
 }
 

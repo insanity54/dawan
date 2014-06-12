@@ -1,5 +1,6 @@
 var dns = require('native-dns');
-var server = dns.createTCPServer();
+//var server = dns.createTCPServer();
+var server = dns.createServer();
 var db = require('../middleware/db');
 
 server.on('request', function(req, res) {

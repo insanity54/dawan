@@ -182,7 +182,9 @@ var client = function(app) {
     function getReqIP(req, res, next) {
 	console.log('::getReqIP');
 	if (!req.dwane) req.dwane = {};
-	var ip = req.connection.remoteAddress;
+	//console.dir(req.headers);
+	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	console.log('  req IP:' + ip);
 	if (ip) {
 	    if (!req.dwane) req.dwane = {};
 	    req.dwane.ip = ip;
@@ -221,7 +223,6 @@ var client = function(app) {
 	res.send('invalid cid');
     }
 
-
     function verifyClientOwner(req, res, next) {
 	console.log('::verifyClientowner');
 	// get cid
@@ -232,8 +233,10 @@ var client = function(app) {
 	var uid = req.dwane.uid;
 
 	db.getClientOwner(cid, function(err, owner) {
-	    if (err) res.send('database error 2384');
-	    if (owner == uid) next();
+	    //console.log('owner of cid ' + cid + ' is: ' + owner + ' and reqUid is: ' + uid);
+	    if (err) return res.send('database error 2384');
+	    if (!owner) return res.end('no owner of cid ' + cid);
+	    if (owner == uid) return next();
 	});
     }
 
@@ -316,6 +319,7 @@ var client = function(app) {
 
 	db.setClientOwner(cid, uid, function(err, reply) {
 	    if (err) res.send('database error 2389');
+	    if (!reply) res.send('could not set client ' + cid + ' owner ' + uid);
 	    next();
 	});
     }
