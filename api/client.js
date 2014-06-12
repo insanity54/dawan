@@ -1,3 +1,7 @@
+// Handler of Dwane updater client interactios
+//   i.e. The Dwane.co google chrome extension
+
+
 var db = require('../middleware/db.js');
 
 

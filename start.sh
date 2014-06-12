@@ -27,6 +27,9 @@ else
     echo 'What port do you want node to run on?:'
     read port
 
+    echo 'What do you want to use as your express session secret? (Generate some randomness)'
+    read secret
+
     echo -e '\n-- EXTERNAL AUTHENTICATION STRATEGIES --'
 
     echo 'What is your 37signals client ID?'
@@ -43,6 +46,7 @@ else
     touch $bindir/config.json
     echo "{"                                                         >> $bindir/config.json
     echo "  \"PORT\"                 : \"$port\"",                   >> $bindir/config.json
+    echo "  \"SECRET\"               : \"$secret\"",                 >> $bindir/config.json
     echo "  \"THIRTY7CLIENTID\"      : \"$thirty7clientid\"",        >> $bindir/config.json
     echo "  \"THIRTY7CLIENTSECRET\"  : \"$thirty7clientsecret\"",    >> $bindir/config.json
     echo "  \"THIRTY7CALLBACKURL\"   : \"$thirty7callbackurl\""      >> $bindir/config.json

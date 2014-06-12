@@ -8,8 +8,8 @@ var nconf = require('nconf');
 var redis = require('redis');
 var nunjucks = require('nunjucks');
 var cors = require('cors');
+var passport = require('passport');
 
-//var passport = require('passport');
 //var passport-google-o
 
 var red = redis.createClient(null, null, {"retry_max_delay": "180000"});
@@ -37,6 +37,11 @@ app.set('thirty7ClientId', nconf.get('THIRTY7CLIENTID'));
 app.set('thirty7ClientSecret', nconf.get('THIRTY7CLIENTSECRET'));
 app.set('thirty7CallbackUrl', nconf.get('THIRTY7CALLBACKURL'));
 app.use(cors()); // CORS
+app.use(express.static(__dirname + '/public'));
+app.use(express.cookieParser());
+app.use(express.session({ secret: 'omgwer123 changeme' }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 	
@@ -44,7 +49,7 @@ app.use(cors()); // CORS
 
 
 // nunjucks templating
-nunjucksEnv = new nunjucks.Environment( new nunjucks.FileSystemLoader(__dirname + '/tpl'), { autoescape: true });
+nunjucksEnv = new nunjucks.Environment( new nunjucks.FileSystemLoader(__dirname + '/public'), { autoescape: true });
 nunjucksEnv.express(app);
 
 // express stuff
@@ -356,11 +361,15 @@ app.use(express.logger('dev'));
 
 // });
 
+
+
 // api endpoints
-require('./api/client')(app);
+require('./api/client')(app);    // updater client interface
+require('./api/auth')(app);      // user authentication
+require('./api/cp')(app);        // user/admin web-based control panel
 
 
-app.use(express.static(__dirname + '/public'));
+
 
 console.log('server listening on port ' + nconf.get('PORT'));
 server.listen(nconf.get('PORT'));
