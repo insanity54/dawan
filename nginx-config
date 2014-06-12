@@ -1,0 +1,108 @@
+# the IP(s) on which your node server is running.
+upstream dwaneservers {
+#    server 127.0.0.1:38382; # dabutt
+     server 54.201.164.32:22454;    # ic-amazon
+}
+
+upstream testserver {
+	 server 127.0.0.1:53533;
+}
+
+upstream aneuservers {
+    server 127.0.0.1:8080;
+}
+
+# # the nginx server instance
+#     # pass the request to the node.js server with the correct headers and much more can be added, see nginx config options
+
+#     location / {
+#       proxy_set_header X-Real-IP $remote_addr;
+#       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#       proxy_set_header Host $http_host;
+#       proxy_set_header X-NginX-Proxy true;
+
+#       proxy_pass http://dwaneservers/$http_host;
+#       proxy_redirect off;
+#     }
+# }
+
+# user is requesting root directory, so serve dwane control panel
+server {
+       listen 0.0.0.0:80;
+       server_name dwane.co www.dwane.co;
+       access_log /var/log/nginx/dwane.log;
+
+       location / {
+       		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Host $http_host;
+		proxy_set_header X-NginX-Proxy true;
+
+		proxy_pass http://dwaneservers;
+		proxy_redirect off;
+       }
+}
+
+server {
+       listen 0.0.0.0:80;
+       server_name *.dwane.co;
+       access_log /var/log/nginx/dwane.log;
+
+       location / {
+       		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Host $http_host;
+		proxy_set_header X-NginX-Proxy true;
+
+		proxy_pass http://dwaneservers/client/home/$http_host;
+		proxy_redirect off;
+       }
+}
+
+server {
+       listen 0.0.0.0:80;
+       server_name larp.dwane.co;
+       access_log /var/log/nginx/aneu.log;
+
+       location / {
+       		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Host $http_host;
+		proxy_set_header X-NginX-Proxy true;
+
+		proxy_pass http://aneuservers;
+		proxy_redirect off;
+       }
+}
+
+# server {
+#        listen 0.0.0.0:80;
+#        server_name ns1.dwane.co;
+#        access_log /var/log/nginx/dwane.log;
+
+#        location / {
+#        		proxy_set_header X-Real-IP $remote_addr;
+# 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+# 		proxy_set_header Host $http_host;
+# 		proxy_set_header X-NginX-Proxy true;
+
+# 		proxy_pass http://testserver;
+# 		proxy_redirect off;
+#        }	       
+# }
+
+# server {
+#        listen 0.0.0.0:53;
+#        server_name ns2.dwane.co;
+#         access_log /var/log/nginx/dwane.log;
+
+#         location / {
+#         	proxy_set_header X-Real-IP $remote_addr;
+#  		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#  		proxy_set_header Host $http_host;
+#  		proxy_set_header X-NginX-Proxy true;
+
+#  		proxy_pass http://testserver;
+#  		proxy_redirect off;
+#  	}	       
+#  }
