@@ -166,8 +166,10 @@ function createUser(callback) {
 	    if (err) return callback(err, null);
 	    if (!uid) return callback('could not generate uid', null);
 
-	    red.
-	    
+	    red.SET('user/' + uid + '/number', number, function(err, good) {
+		if (err) return callback(err, null);
+		if (!good) return callback('could not set user number', null);
+	    });
 	});
     });
 }

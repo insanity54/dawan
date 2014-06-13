@@ -3,39 +3,104 @@ var dns = require('native-dns');
 var server = dns.createServer();
 var db = require('../middleware/db');
 
-server.on('request', function(req, res) {
-    console.log('request: ' + req);
-    console.dir(req);
 
-    var questions = req.question;
-    questions.forEach(function(question) {
+
+/**
+ * answerQuestions
+ *
+ * Goes through each asked question one by one
+ * for each question, it's *.dwane.co alias is found,
+ * and the database is queried for the alias.
+ *
+ * @param {Array} questions     an array of dns question objects.
+ *                              ex: { name: derp.dwane.co, type: 1, class: 1 }
+ * @callback next               called when all questions are answered. (err)
+ *                              (answer is an array of dns answer objects)
+ */
+function answerQuestions(req, res, next) {
+    (function answerOne() {
+	var questions = req.question.slice(0); // clone question array
+	var q = questions.splice(0, 1)[0];  // remove the first question and return it (store in q)
+
+	var alias;
+	var name = q.name;
+	var match = name.match(/[^.]+/);
+	if (match) alias = match[0];
+	console.log('alias: ' + alias + ', ' +
+		    'name: ' + name + ', ' +
+		    'match: ' + match);
+
         // look in db for alias with this questioned domain
-
-        // turn 'grimnok.dwane.co' to 'grimnok'
-        var alias;
-        var name = question.name;
-        var match = name.match(/[^.]+/);
-        if (match) alias = match[0];
-        console.log('alias: ' + alias + ', ' +
-                    'name: ' + name + ', ' +
-                    'match: ' + match);
-        
-        db.getAliasMap(alias, function(err, cid) {
-            db.getClientLatestIP(cid, function(err, ip) {
-
-                console.log('got client latest ip: ' + ip);
+	db.getAliasMap(alias, function(err, cid) {
+	    if (err) return next();
+	    if (!cid) return next('couldn\'t get alias map');
+	    
+	    db.getClientLatestIP(cid, function(err, ip) {
+		if (err) return next(err);
+		if (!ip) return next('couldn\'t get latest ip');
+		
+		console.log('client latest IP: ' + ip);
 
                 res.answer.push(dns.A({
                     name: name,
                     address: ip,
-                    ttl: 600,
+                    ttl: 600
                 }));
 
-                return res.send();                
-                
-            });
-        });
+		res.authority.push(dns.SOA({
+		    name: name,
+		    ttl: 600,
+		    primary: 'ns1.dwane.co.',   // @todo don't hard code these
+		    admin: 'chris.grimtech.net.',
+		    serial: 1,
+		    refresh: 21600,
+		    retry: 1800,
+		    expiration: 1209600,
+		    minimum: 432000
+		}));
+
+		
+		if (questions.length == 0) {
+		    console.log("EVERYTHING IS AWESOME");
+		    return next();
+		    
+		} else {
+		    console.log(" >> answer some more!");
+		    answerOne();
+		}
+	    });
+	});
+    })();
+}
+
+		
+	
+    
+
+
+
+server.on('request', function(req, res) {
+    console.log('request: ' + req);
+    console.dir(req);
+
+    console.log('for each question:');
+    console.dir(req.question);
+    
+    answerQuestions(req, res, function(err) {
+	if (err) console.log('error answering questions: ' + err);
+	// console.dir(answers);
+
+	//res.question = req.question;
+	//res.answer = answers;
+	// console.log('appendin answeers');
+	// console.dir(res.answer);
+	console.log('SENDING RESPONSE:');
+	console.dir(res);
+
+	return res.send();
     });
+});
+
                        
     //     question
         
@@ -74,7 +139,7 @@ server.on('request', function(req, res) {
     //     ttl: 600,
     // }));
     
-});
+
 
 
 server.on('listening', function(req, res) {
