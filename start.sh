@@ -5,6 +5,7 @@ bindir="$(dirname "$(readlink -fn "$0")")"
 
 function start() {
     echo "Startup checks successful."
+    cd $bindir
     node app.js
     exit 0
 }
@@ -24,11 +25,17 @@ if [[ -f $bindir/config.json ]]; then
 else
     # no config file exists. create one
     echo -e '\n-- NODE INSTANCE --'
+    echo 'What IP addresses will dwane run on? (comma separated list)'
+    read addresses
+
     echo 'What port do you want node to run on?:'
     read port
 
     echo 'What do you want to use as your express session secret? (Generate some randomness)'
     read secret
+
+    echo 'What is the FQDN of the site this app will run on?'
+    read fqdn
 
     echo -e '\n-- EXTERNAL AUTHENTICATION STRATEGIES --'
 
@@ -45,8 +52,10 @@ else
     
     touch $bindir/config.json
     echo "{"                                                         >> $bindir/config.json
+    echo "  \"ADDRESSES\"            : [\"$addresses\"],            >> $bindir/config.json
     echo "  \"PORT\"                 : \"$port\"",                   >> $bindir/config.json
     echo "  \"SECRET\"               : \"$secret\"",                 >> $bindir/config.json
+    echo "  \"FQDN\"                 : \"$fqdn\"",                   >> $bindir/config.json
     echo "  \"THIRTY7CLIENTID\"      : \"$thirty7clientid\"",        >> $bindir/config.json
     echo "  \"THIRTY7CLIENTSECRET\"  : \"$thirty7clientsecret\"",    >> $bindir/config.json
     echo "  \"THIRTY7CALLBACKURL\"   : \"$thirty7callbackurl\""      >> $bindir/config.json

@@ -109,7 +109,7 @@ function getAliasMap(alias, callback) {
  * @param {int} cid    the client ID number
  */
 function getClientLatestIP(cid, callback) {
-    red.LRANGE('client/' + cid + '/ip/recentl', -1, -1, function(err, update) {
+    red.LRANGE('client/' + cid + '/ip/recentl', 0, 0, function(err, update) {
 	if (err) return callback(err, null);
 	if (update == false) return callback(null, undefined);
 
@@ -245,6 +245,7 @@ function setClientLifetimeIP(cid, ip, epoch, callback) {
 	     });
 }
 
+// @todo this should be named, 'setClientLatestIP'... rename all instances in all files
 function setClientRecentIP(cid, ip, epoch, callback) {
     red.LPUSH('client/' + cid + '/ip/recentl',
 	      ip + ' ' + epoch,
