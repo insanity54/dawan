@@ -175,7 +175,7 @@ var auth = function(app) {
 	var bcuid = profile.id;
 	//done(null, bcuid);
 
-        db.getBasecampUser(bcuid, function(err, uid) {
+        db.findOrCreateBasecampUser(bcuid, function(err, uid) {
             // done is a passport.js 'verify callback.'
             // in a server exeption, set err to non-null value.
             // in an auth failure, err remains null, and use

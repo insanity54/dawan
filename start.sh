@@ -52,7 +52,7 @@ else
     
     touch $bindir/config.json
     echo "{"                                                         >> $bindir/config.json
-    echo "  \"ADDRESSES\"            : [\"$addresses\"],            >> $bindir/config.json
+    echo "  \"ADDRESSES\"            : [\"$addresses\"]",            >> $bindir/config.json
     echo "  \"PORT\"                 : \"$port\"",                   >> $bindir/config.json
     echo "  \"SECRET\"               : \"$secret\"",                 >> $bindir/config.json
     echo "  \"FQDN\"                 : \"$fqdn\"",                   >> $bindir/config.json
