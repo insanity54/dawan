@@ -140,17 +140,31 @@ function findOrCreateBasecampUser(bcuid, callback) {
 	if (uid) return callback(null, uid);  // got user
 	
 	// uid for this bcuid is not set, so create user
-	createUser(function(err, uid) {
-	    console.log('db::findOrCreateBasecampUser: created user with uid: ' + uid);
+	createBasecampUser(bcuid, function(err, uid) {
 	    if (err) return callback(err, null);
-	    if (!uid) return callback(null, null);
-	    
-	    red.SET('user/basecamp/' + bcuid + '/uid', uid, function(err, reply) {
-		console.log('set basecamp user ' + reply + ' tyvm');
-		if (err) return callback(err, null);
-		if (!reply) return callback(null, null);
-		return callback(null, reply);
-	    });	
+	    if (!uid) return callback('could not create basecamp user', null);
+	    console.log('db::findOrCreateBasecampUser: returning uid: ' + uid);
+	    return callback(null, uid);
+	});
+    });
+}
+
+/*
+ * createBasecampUser
+ *
+ * @callback callback   (err, uid)
+ */
+function createBasecampUser(bcuid, callback) {
+    console.log('db::createBasecampUser');
+    createUser(function(err, uid) {
+	if (err) return callback(err, null);
+	if (!uid) return callback(null, null);
+
+	red.SET('user/basecamp/' + bcuid + '/uid', uid, function(err, reply) {
+	    console.log('set basecamp user ' + bcuid + ' tyvm');
+	    if (err) return callback(err, null);
+	    if (!reply) return callback(null, null);
+	    return callback(null, uid);
 	});
     });
 }
@@ -168,11 +182,13 @@ function createUser(callback) {
 	    if (err) return callback(err, null);
 	    if (!uid) return callback('could not generate uid', null);
 
-	    red.SET('user/' + uid + '/number', number, function(err, good) {
-		console.log('set user/uid/number to: ' + good);
+	    red.SET('user/' + uid + '/number', number, function(err, ok) {
+		console.log('set user/uid/number to: ' + number);
 		if (err) return callback(err, null);
-		if (!good) return callback(null, null);
-		return callback(null, number); //@todo there needs to be a way to refer to a uid using their number
+		if (!ok) return callback(null, null);
+		return callback(null, uid);
+		
+		// @todo there needs to be a way to refer to a uid using their number
 	    });
 	});
     });
@@ -182,11 +198,50 @@ function createUser(callback) {
 function generateUid(callback) {
     console.log('db:generateUid');
     var bufs = [];
+    var uid;
+
+    randomHex = child.spawn('openssl', ['rand', '-hex', '5']);
+
+    randomHex.stdout.on('data', function(data) {
+	bufs.push(data);
+	console.log('db::generateUid: got data: ' + data);
+	console.dir(data.toString());
+    });
+
+    randomHex.stdout.on('end', function() {
+
+	uid = Buffer.concat(bufs)
+	    .toString()
+	    .replace(/\n/, "")
+	    .concat('-0');
+
+	// I <3 chainable interfaces
+
+
+	
+	// console.log('db::generateUid done.');
+	// console.dir(bufs);
+	
+	// console.log('concat arr of bufs');
+	
+	
+	// uid = Buffer.concat(bufs);
+
+	// console.dir(uid);
+	console.log('stringify buffer');
+	//uid = uid.toString();
+	
+	//console.log('append gen ver no.');
+	//uid = uid.concat('-235'); // uid generator version number
+	console.dir(uid);
+	
+	return callback(null, uid);
+    });
     
-    randomHex = child.spawn('openssl', ['rand', '-hex',  '5']);
-    randomHex.stdout.on('data', function(data) { bufs.push(data); console.log('db::generateUid: got data: ' + data); });
-    randomHex.stdout.on('end', function() {  return callback(null, Buffer.concat(bufs) + '-0') });
-    randomHex.stderr.on('data', function(data) { console.log('db::generateUid STANDARD ERROR'); });
+    randomHex.stderr.on('data', function(data) {
+	console.log('db::generateUid STANDARD ERROR: ' + data);
+    });
+    
     //randomHex.on('close', function(code) { console.log('child process exited with code ' + code); })
 }
 
@@ -216,25 +271,25 @@ function getUid(callback) {
     });
 }
 
-/**
- * setBasecampUser
- *
- * creates new basecamp user
- * (called by getBasecampUser... not exported.)
- */
-function setBasecampUser(bcuid, callback) {
-    // generate uid   (openssl rand -hex 5) + '-0' => uid
-    // create uidn    INCR user/index => SET user/*uid*/number uidn
-    //                SET  user/*uid*/clients
-    //                
+// /**
+//  * setBasecampUser
+//  *
+//  * creates new basecamp user
+//  * (called by getBasecampUser... not exported.)
+//  */
+// function setBasecampUser(bcuid, callback) {
+//     // generate uid   (openssl rand -hex 5) + '-0' => uid
+//     // create uidn    INCR user/index => SET user/*uid*/number uidn
+//     //                SET  user/*uid*/clients
+//     //                
 
-    red.SET('user/basecamp/' + bcuid + '/uid', uid, function(err, good) {
-	console.log('set basecamp user ' + good + ' tyvm');
-	if (err) return callback(err, null);
-	if (!good) return callback(null, null);
-	return callback(null, good);
-    });
-}
+//     red.SET('user/basecamp/' + bcuid + '/uid', uid, function(err, ok) {
+// 	console.log('set basecamp user ' + bcuid + ' tyvm');
+// 	if (err) return callback(err, null);
+// 	if (!ok) return callback(null, null);
+// 	return callback(null, uid);
+//     });
+// }
     
 
 function setClientLifetimeIP(cid, ip, epoch, callback) {

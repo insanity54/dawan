@@ -161,7 +161,7 @@ var auth = function(app) {
         // we're going to use the basecamp user id (bcuid)
         // to find our user id (uid)
 
-	console.log('basecamp profile retrieved ');
+	console.log('basecamp profile retrieved :_');
 	//console.dir(profile);
 	
 
