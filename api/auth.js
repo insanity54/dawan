@@ -147,8 +147,9 @@ var auth = function(app) {
             function(req, res) {
 
 		// successful authentication, redirect home.
-                console.log('auth.js::app.get - req.user:' + req.user); 
-                res.redirect('/admin/' + req.user);
+                console.log('auth.js::app.get - req.user:' + req.user);
+		console.dir(req.user);
+                res.redirect('/cp');
             });
            
     passport.use(new Thirty7SignalsStrategy({
@@ -184,7 +185,11 @@ var auth = function(app) {
 
             // @todo possibility for future: get user's basecamp info we need
             console.log('BCUID: ' + bcuid + ' => UID: ' + uid);
-            done(null, uid);
+
+	    // put the uid in a profile object to serialize to the sesh
+	    var profile = {};
+	    profile.uid = uid;
+            done(null, profile);
         });
     }));
 }

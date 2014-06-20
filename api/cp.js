@@ -1,6 +1,8 @@
 // User/Admin control panel
 
 var db = require('../middleware/db');
+var u = require('../middleware/user');
+var c = require('../middleware/client');
 var passport = require('passport');
 
 
@@ -24,14 +26,15 @@ var cp = function(app) {
     }
 
     function getReqUser(req, res, next) {
-	console.log('::getReqUser');
+	console.log('::getReqUser with req.user: ' + req.user + ' and req.user.uid: ' + req.user.uid);
 	if (req.isAuthenticated) {
-	    console.log('[++] user is authentted: ' + req.isAuthenticated);
+	    console.log('[++] user is authentted: ');
 
 	} else {
 	    console.log('[--] user is not auth');
 	}
-	var user = req.params.user;
+	
+	var user = req.user;
 	if (!user) return res.send('didn\'t receive user in request');
 	if (!req.dwane) req.dwane = {};
 	req.dwane.user = user;
@@ -40,8 +43,14 @@ var cp = function(app) {
 	
     function getUserClients(req, res, next) {
 	console.log('::getUserClients');
+
+	
+	
+	
 	if (typeof req.dwane == 'undefined') return res.send('req.dwane is undefined', 500);
 	if (typeof req.dwane.user == 'undefined') return res.send('req.dwane.user is undefined', 500);
+
+	console.log('req.dwane.user is: ' + req.dwane.user);
 	
 	var user = req.dwane.user;
 	if (!user) res.send('could not retrieve user from buffer', 500);
@@ -57,7 +66,9 @@ var cp = function(app) {
     function renderCP(req, res) {
 	console.log('::renderCP');
 	console.log('req.user: ' + req.user);
-	res.render('index.html');
+	res.render('index.html', { 'clients': req.dwane.clients,
+				   'uid': req.user.uid
+				 });
     }
 
     /**
@@ -83,6 +94,23 @@ var cp = function(app) {
 	    getUserClients,
 	    renderCP
 	   );
+
+
+    /**
+     * User is loading their client mappings in their control panel
+     * Angular calls this. returns configuration json which includes:
+     *
+     * - Updater client configs
+     * - User's claimed dwane domains
+     * - User's mappings for dwane domain <-> updater client
+     */
+    app.get("/api/cp/:uid",
+            //u.authenticate,
+            u.getReqUid,
+            u.validateUid
+	    //u.sendMappings
+	   );
+
     
 }
 	    

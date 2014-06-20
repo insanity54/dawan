@@ -103,6 +103,7 @@ app.use(express.logger('dev'));
 
 
 // api endpoints
+require('./api/user')(app);      // user related data interface
 require('./api/client')(app);    // updater client interface
 require('./api/auth')(app);      // user authentication
 require('./api/cp')(app);        // user/admin web-based control panel
