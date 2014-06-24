@@ -53,6 +53,7 @@ function getReqAlias(req, res, next) {
 function getReqUid(req, res, next) {
     console.log('::getReqUid');
     var uid = req.params.uid;
+    
     if (uid) {
 	if (!req.dwane) req.dwane = {};
 	req.dwane.uid = uid;
@@ -81,7 +82,22 @@ function validateUser(req, res, next) {
     });
 }
 
+function sendConfigTest(req, res) {
+    console.log('user::sendConfigTest');
+    var uid = req.dwane.uid;
 
+    if (!uid) res.send('could not retrieve uid from buffer', 500);
+    console.log('user id: ' + uid);
+
+    db.getUserClients(uid, function(err, clients) {
+	db.getUser(uid, function(err, number) {
+	    if (err) res.send('db error 2386');
+	    if (number) return res.json({ 'number': number,
+					  'clients': clients });
+	    res.send('uid has no user number');
+	});
+    });
+}
 
 module.exports = {
     getAliasOwner: getAliasOwner,
@@ -89,6 +105,7 @@ module.exports = {
     getReqAlias: getReqAlias,
     getReqUid: getReqUid,
     validateUid: validateUid,
-    validateUser: validateUser
+    validateUser: validateUser,
+    sendConfig: sendConfigTest
 };
     

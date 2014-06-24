@@ -54,7 +54,6 @@
             <li><a href="javascript:;"><i class="glyphicon glyphicon-flash"></i> Alerts</a></li>
             <li><a href="javascript:;"><i class="glyphicon glyphicon-link"></i> Links</a></li>
             <li><a href="javascript:;"><i class="glyphicon glyphicon-list-alt"></i> Reports</a></li>
-            <li><a href="javascript:;"><i class="glyphicon glyphicon-book"></i> Books</a></li>
             <li><a href="javascript:;"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
             <li><a href="javascript:;"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
             <li><a href="javascript:;"><i class="glyphicon glyphicon-plus"></i> Advanced..</a></li>
@@ -78,62 +77,97 @@
                 <div class="panel-heading"><h4>Your Updater Clients</h4></div>
                 <div class="panel-body">
 
-		  <div class="well">
+		  <h4>Mapped updater clients</h4>
+		  <ul class="list-group">
 
-		    <div class="row"> <!-- active mappings row -->
-		      <div class="col-lg-4">
-			<button class="btn btn-inverse">grimnok.dwane.co</button>
-		      </div>
+		    <div class="dwane-map" ng-controller="DragDropCtrl">
+			<li class="list-group-item">
+			  <div class="row"> <!-- active mappings row -->
+			    
+			    <!-- DOMAIN BIN -->
+			    <!-- DOMAIN BIN -->
+			    <div class="col-lg-4 dwane-bin" droppable drop="handleDomainDrop()">
+			      <div id="ddomain001" class="dwane-domain" draggable>
+				<span class="label label-default">grimnok.dwane.co
+			      </div>
+			    </div>
+			    
+			    <div class="col-lg-4">
+			      <span class="glyphicon glyphicon-chevron-left"></span>
+			      mapped to
+			      <span class="glyphicon glyphicon-chevron-right"></span>
+			    </div>
+			    
+			    <!-- CLIENT BIN -->
+			    <!-- CLIENT BIN -->
+			    <div class="col-lg-4 dwane-bin" droppable drop="handleClientDrop()">
+			      <div id="dclient001" class="dwane-client" draggable>
+				<span class="label label-default">123453-3423-2342-285823</span>
+			      </div>
+			      
+			      
+			    </div> <!-- / .dwane-bin-client -->
+			  </div>   <!-- / .row -->
+			</li>
+		      </div>       <!-- / .dwane-map -->
 
-		      <div class="col-lg-4">
-			<span class="glyphicon glyphicon-arrow-left"></span>
-			<span class="glyphicon glyphicon-arrow-right"></span>
-		      </div>
-		      
-		      <div class="col-lg-4">
-			<button class="btn btn-inverse">112312-1231-2344-2342342
-			  <br />192.168.1.5</button>
-		      </div>
 
-		    </div> <!-- / .row -->
-		  </div>   <!-- / .well -->
-		  <!-- end of active mappings -->
+		  </ul>
 
-		  <!-- start of unmapped updater clients -->
-		  <div class="well">
-		    <div class="row">
-		      test
-		      
+		  <div class="row">
+		    <div class="col-lg-4">
+		      <button class="btn">
+			<span class="glyphicon glyphicon-plus-sign"></span> New Dwane Domain</button>
 		    </div>
 		  </div>
-		  
-		  Search: <input type="text" ng-model="searchText" />
-		  {{ searchText }}
-		  
-		  <h3>Taco toppings</h3>
-		  <table>
-		    <tr ng-repeat="top in toppings | filter:searchText">
-		      <td>{{ top }}</td>
-		      <td></td>
-		    </tr>
-		  </table>
+		  <!-- end of active mappings -->
+		  <hr>
 
-		  <div ng-controller="ClientMapperCtrl">
-		    {# Dwane domain rows. Contain a dwane domain and the mapped updater client #}
-		    {# New domain button. Click to add a domain #}
-		    {# horizontal separator #}
-		    {# Unmapped updater clients. To map a client, create a new dwane domain then
-		       drag the client to the associated dwane domain row. #}
+		  <!-- start of unmapped updater clients -->
+		  <!-- start of unmapped updater clients -->
+		  <div ng-controller="ClientListerCtrl">
+		    
+		    <h4>Unmapped updater clients (click and drag to map to dwane domain)</h4>
 
 		    
+		    <div droppable
+			 class="dwane-client dwane-bin" 
+			 drop="handleDrop"
+			 role="client">
+		        
+
+		      <div draggable
+			   ng-repeat="client in clients"
+			   id="client{{ client }}"
+			   class="dwane-client dwane-item"
+			   role="client">
+
+			<span class="label label-default">
+			  {{ client }} - 192.168.112.6ee
+			</span>
+			
+		      </div>
+		    </div>
 		    
-		    
-		    <h3>Test</h3>
-		  </div> <!-- / ng-controller div -->
+		    <div ng-hide="clients.length">
+		      <p>You have no registered updater clients.
+			To get started with an updater client,
+			see the <a href="#/download">download</a> page
+		      </p> <!-- @todo set up download page -->
+		    </div>
+
+		  </div> <!-- / ul.list-group -->
 		</div>   <!-- / .panel-body -->
-	      </div>     <!-- / .panel panel-default -->
-
-	  </div>         <!-- / .row -->
+	      </div>     <!-- / .panel -->
+	  </div>         <!-- / .row -->	      
+		
+		  
+		  
+	    {# Dwane domain rows. Contain a dwane domain and the mapped updater client #}
+	    {# New domain button. Click to add a domain #}
+	    {# horizontal separator #}
+	    {# Unmapped updater clients. To map a client, create a new dwane domain then
+	    drag the client to the associated dwane domain row. #}
 
 
 
@@ -317,7 +351,6 @@
           <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Toolbox</a></li>
           <li><a href="#"><i class="glyphicon glyphicon-link"></i> Widgets</a></li>
           <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i> Reports</a></li>
-          <li><a href="#"><i class="glyphicon glyphicon-book"></i> Pages</a></li>
           <li class="divider"></li>
           <li><a href="#"><i class="glyphicon glyphicon-star"></i> Social Media</a></li>
 	</ul>

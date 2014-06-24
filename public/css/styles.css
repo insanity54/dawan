@@ -29,3 +29,8 @@ footer {
   -o-border-radius: 10px;
   border-radius: 10px;
 }
+
+
+.dwane-bin {
+    border: 3px dashed orange;
+}
