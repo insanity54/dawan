@@ -64,10 +64,10 @@ function getReqUid(req, res, next) {
 
 function validateUid(req, res, next) {
     console.log('::validateUid');
-    if (/[a-fA-F0-9]{10}-\d/.test(req.dwane.uid)) {
+    if (/^[a-fA-F0-9]{10}-\d/.test(req.dwane.uid)) {
 	return next();
     }
-    res.send('invalid uid: ' + req.dwane.uid, 400);
+    res.send('invalid uid: uid ' + req.dwane.uid + 'does not match correct format. ', 400);
 }
 
 function validateUser(req, res, next) {
