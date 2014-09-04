@@ -1,0 +1,19 @@
+{
+    "name":	"Dwane.co updater client",
+    "description":	"A spiffy DDNS updater client for use with the http://dwane.co service",
+    "manifest_version": 2,
+    "version": "0.0.1",
+    "app": {
+	"background": {
+	    "scripts": ["model.js", "view.js", "controller.js"],
+	    "persistent": true
+	}
+    },
+    "icons": { "16": "dwane-16.png", "128": "dwane-128.png" },
+    "permissions": ["background", "storage"]
+}
+	    
+	
+	
+	
+	
