@@ -1,11 +1,16 @@
 function View(window) {
     this.textbox = window.document.querySelector('#uid');
-    this.textbox.addEventListener('onchange', this.handleChange.bind(this));
+    this.textbox.addEventListener('input', this.handleChange_.bind(this));
 }
 
 
-
-View.prototype.handleChange = function(event) {
-    event.preventDefault();
+View.prototype.handleChange_ = function handleChange_(event) {
     this.onChange.call(this, event);
+}
+
+
+View.prototype.setValues = function setValues(values) {
+    console.dir(values);
+    console.dir(this.textbox);
+    this.textbox.value = values.uid;
 }

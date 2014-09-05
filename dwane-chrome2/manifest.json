@@ -10,7 +10,7 @@
 	}
     },
     "icons": { "16": "dwane-16.png", "128": "dwane-128.png" },
-    "permissions": ["background", "storage"]
+    "permissions": ["storage"]
 }
 	    
 	
